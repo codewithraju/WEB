@@ -1,0 +1,2260 @@
+<%@ Page Language="C#" MasterPageFile="~/MainMaster.master" AutoEventWireup="true"
+    CodeFile="IpdShortStay.aspx.cs" Inherits="IPD_IpdShortStay" Title="IPD Short Stay" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link rel="shortcut icon" href="../image/favicon-16x16.png" />
+
+    <script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
+
+    <script src="js/IpdShortStay.js" type="text/javascript"></script>
+
+    <%-- <script src="js/IPDAdmission.js" type="text/javascript"></script>--%>
+
+    <script src="../js/BindMenu.js" type="text/javascript"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../Jquery/custom.filter.paging.js" type="text/javascript"></script>
+    <link href="../Jquery/custom.filter.paging.css" rel="stylesheet" type="text/css" />
+    <link href="../css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+    <script src="../scripts/jquery.autocomplete.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="../Jquery/jquery-ui.css" />
+
+    <script src="../Jquery/jquery-ui.js" type="text/javascript"></script>
+
+    <%--<script src="../Jquery/jquery.scrollabletab.js"></script>--%>
+    <%--<script src="../Jquery/jquery.ui.scrolltabs.js"></script>--%>
+    <link href="../css/test.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        b {
+            font-size: 14px;
+        }
+        .mydetailmenu {
+            padding: 10px;
+            background-color: rgb(64, 58, 53);
+            position: fixed;
+            width: 101%;
+            bottom: 0px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //    //$(".txtBrandName").tooltip();
+            //    //$("#tabs").tabs();//InnerTabsForBrand
+            $('#tabs').tabs();
+        });
+    </script>
+
+    <style type="text/css">
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            max-width: 950px; /* prevent horizontal scrollbar */
+            overflow-x: hidden; /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+        }
+
+        .ui-menu {
+            width: 450px;
+            overflow-y: auto;
+        }
+
+        .select, .chosen-select, .chosen-select-no-single, .chosen-select-no-results, .chosen-select-deselect, .chosen-select-rtl, .chosen-select-width {
+            width: 350px .photo;
+
+        {
+            display: block; /*hei ht: 200px;
+        
+          width: 175 x;*/
+        }
+        /*.ui-scroll-tabs-header:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .ui-scroll-tabs-view {
+            z-index: 1;
+            overflow: hidden;
+        }
+
+            .ui-scroll-tabs-view .ui-widget-header {
+                border: none;
+                background: transparent;
+            }
+
+        .ui-scroll-tabs-header {
+            position: relative;
+            overflow: hidden;
+        }
+
+            .ui-scroll-tabs-header .stNavMain {
+                position: absolute;
+                top: 0;
+                z-index: 2;
+                height: 100%;
+                opacity: 0;
+                transition: left .5s, right .5s, opacity .8s;
+                transition-timing-function: swing;
+            }
+
+                .ui-scroll-tabs-header .stNavMain button {
+                    height: 100%;
+                }
+
+            .ui-scroll-tabs-header .stNavMainLeft {
+                left: -250px;
+            }
+
+                .ui-scroll-tabs-header .stNavMainLeft.stNavVisible {
+                    left: 0;
+                    opacity: 1;
+                }
+
+            .ui-scroll-tabs-header .stNavMainRight {
+                right: -250px;
+            }
+
+                .ui-scroll-tabs-header .stNavMainRight.stNavVisible {
+                    right: 0;
+                    opacity: 1;
+                }
+
+            .ui-scroll-tabs-header ul.ui-tabs-nav {
+                position: relative;
+                white-space: nowrap;
+            }
+
+                .ui-scroll-tabs-header ul.ui-tabs-nav li {
+                    display: inline-block;
+                    float: none;
+                }
+
+                    .ui-scroll-tabs-header ul.ui-tabs-nav li.stHasCloseBtn a {
+                        padding-right: 0.5em;
+                    }
+
+                    .ui-scroll-tabs-header ul.ui-tabs-nav li span.stCloseBtn {
+                        float: left;
+                        padding: 4px 2px;
+                        border: none;
+                        cursor: pointer;
+                    }*/
+    </style>
+
+    <script type="text/javascript">
+        function Check_Click(objRef) {
+
+            //Get the Row based on checkbox
+            var row = objRef.parentNode.parentNode;
+            if (objRef.checked) {
+                //If checked change color to Aqua
+                row.style.backgroundColor = "#3F8197";
+                row.style.color = "white";
+                //BindModuleMapping();
+            }
+            else {
+                //If not checked change back to original color
+                if (row.rowIndex % 2 == 0) {
+                    //Alternating Row Color
+                    row.style.backgroundColor = "white";
+                    row.style.color = "black";
+                }
+                else {
+                    row.style.backgroundColor = "white";
+                    row.style.color = "black";
+                }
+                //BindModuleMapping();
+            }
+
+            //Get the reference of GridView
+            var GridView = row.parentNode;
+
+            //Get all input elements in Gridview
+            var inputList = GridView.getElementsByTagName("input");
+
+            for (var i = 0; i < inputList.length; i++) {
+                //The First element is the Header Checkbox
+                var headerCheckBox = inputList[0];
+
+                //Based on all or none checkboxes
+                //are checked check/uncheck Header Checkbox
+                var checked = true;
+                if (inputList[i].type == "checkbox" && inputList[i] != headerCheckBox) {
+                    if (!inputList[i].checked) {
+                        checked = false;
+                        break;
+                    }
+                }
+            }
+            headerCheckBox.checked = checked;
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function checkAll(objRef) {
+
+            var GridView = objRef.parentNode.parentNode.parentNode;
+            var inputList = GridView.getElementsByTagName("input");
+            for (var i = 0; i < inputList.length; i++) {
+                //Get the Cell To find out ColumnIndex
+                var row = inputList[i].parentNode.parentNode;
+                if (inputList[i].type == "checkbox" && objRef != inputList[i]) {
+                    if (objRef.checked) {
+                        //If the header checkbox is checked
+                        //check all checkboxes
+                        //and highlight all rows
+                        row.style.backgroundColor = "#3F8197";
+                        row.style.color = "white";
+                        inputList[i].checked = true;
+                        //BindModuleMapping();
+
+                    }
+                    else {
+                        //If the header checkbox is checked
+                        //uncheck all checkboxes
+                        //and change rowcolor back to original
+                        if (row.rowIndex % 2 == 0) {
+                            //Alternating Row Color
+                            row.style.backgroundColor = "white";
+                            row.style.color = "black";
+                        }
+                        else {
+                            row.style.backgroundColor = "white";
+                            row.style.color = "black";
+                        }
+                        inputList[i].checked = false;
+                        //BindModuleMapping();
+                    }
+                }
+
+            }
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function checkAll1(objRef) {
+
+            var GridView = objRef.parentNode.parentNode.parentNode.parentNode;
+            var inputList = GridView.getElementsByTagName("input");
+            for (var i = 0; i < inputList.length; i++) {
+                //Get the Cell To find out ColumnIndex
+                var row = inputList[i].parentNode.parentNode.parentNode;
+                if (inputList[i].type == "checkbox" && objRef != inputList[i]) {
+                    if (objRef.checked) {
+                        //If the header checkbox is checked
+                        //check all checkboxes
+                        //and highlight all rows
+                        row.style.backgroundColor = "#3F8197";
+                        row.style.color = "white";
+                        inputList[i].checked = true;
+                        //BindModuleMapping();
+
+                    }
+                    else {
+                        //If the header checkbox is checked
+                        //uncheck all checkboxes
+                        //and change rowcolor back to original
+                        if (row.rowIndex % 2 == 0) {
+                            //Alternating Row Color
+                            row.style.backgroundColor = "white";
+                            row.style.color = "black";
+                        }
+                        else {
+                            row.style.backgroundColor = "white";
+                            row.style.color = "black";
+                        }
+                        inputList[i].checked = false;
+                        //BindModuleMapping();
+                    }
+                }
+
+            }
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function Check_Click1(objRef) {
+
+            //Get the Row based on checkbox
+            var row = objRef.parentNode.parentNode.parentNode;
+            if (objRef.checked) {
+                //If checked change color to Aqua
+                row.style.backgroundColor = "#3F8197";
+                row.style.color = "white";
+                //BindModuleMapping();
+            }
+            else {
+                //If not checked change back to original color
+                if (row.rowIndex % 2 == 0) {
+                    //Alternating Row Color
+                    row.style.backgroundColor = "white";
+                    row.style.color = "black";
+                }
+                else {
+                    row.style.backgroundColor = "white";
+                    row.style.color = "black";
+                }
+                //BindModuleMapping();
+            }
+
+            //Get the reference of GridView
+            var GridView = row.parentNode;
+
+            //Get all input elements in Gridview
+            var inputList = GridView.getElementsByTagName("input");
+
+            for (var i = 0; i < inputList.length; i++) {
+                //The First element is the Header Checkbox
+                var headerCheckBox = inputList[0];
+
+                //Based on all or none checkboxes
+                //are checked check/uncheck Header Checkbox
+                var checked = true;
+                if (inputList[i].type == "checkbox" && inputList[i] != headerCheckBox) {
+                    if (!inputList[i].checked) {
+                        checked = false;
+                        break;
+                    }
+                }
+            }
+            headerCheckBox.checked = checked;
+
+        }
+    </script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <input type="hidden" id="hdnFormPrivellege" class="hdnFormPrivellege" runat="server" />
+    <input type="hidden" id="hdnf20Type" class="hdnf20Type" runat="server" />
+    <div style="margin-top: 45px;">
+
+        <div class="row  d-flex justify-content-center mydetailmenu" style="z-index: 4; box-shadow: 0px 14px 14px 8px;">
+            <div class="col-sm-6">
+                <div id="myalertarea">
+                    <div class="alert alert-success" id="divalertSuccess" style="width: 470px; position: absolute;
+                        background-color: #1E8449;display:none; border: none; margin-left: 50px; z-index: 999;
+                        margin-top: 0px; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);
+                        box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+                        <span id="strngSuccess" style="font-weight: bold; color: White; font-family: Calibri">
+                            Danger!</span>
+                    </div>
+                    <div id="divErrorMsg" class="alert alert-danger" style="width: 470px; position: absolute;
+                        margin-top: -7px;display:none; background-color: #CB4335; border: none; margin-left: 50px;
+                        z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);
+                        -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+                        <span id="spnerrormsg" style="font-weight: bold; font-family: Calibri; color: White"
+                            class="spnerrormsg">Hello this is Error Message. </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-end">
+                <button type="button" id="btnUpdateDemographic" style="display: none; background-color: #385d8a" class="btn btn-primary mybtn">
+                    <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Update Demographic
+                </button>&nbsp;
+                <button type="button" data-loading-text="Saving..." id="btnSaveAdmission" style=""
+                    class="btn btn-primary">
+                    <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Save
+                </button>&nbsp;
+                <button type="button" data-loading-text="Updating..." id="btnUpdateAdmission" class="btn btn-info">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp; Update
+                </button>&nbsp;
+                <button type="button" id="btnReset" style="" class="btn btn-danger">
+                    <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                </button>&nbsp;
+                <button type="button" id="btnPrintPDF" style="display: none;" class="btn btn btn-success ml-1">
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;&nbsp;Print
+                </button>
+            </div>
+        </div>
+
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-weight: bold">[Search Record]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>UHID</b>
+                    <input type="text" id="txtUHIDSearch" placeholder="UHID" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>OPD No.</b>
+                    <input type="text" id="txtOPDNOSearch" placeholder="OPD No." class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>IPD No.</b>
+                    <input type="text" id="txtIPDNoSearch" placeholder="IPD No." class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Casualty No.</b>
+                    <input type="text" id="txtCasualtySearch" placeholder="Casualty No." class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Name</b>
+                    <input type="text" id="txtNameSearch" placeholder="Name" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Mobile</b>
+                    <input type="text" id="txtMobileSearch" placeholder="Mobile" maxlength="10" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>PID NO</b>
+                    <input type="text" id="txtAadhaarSearch" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" data-toggle="tooltip" title="Search" id="btnSearchupUhid" style=""
+                        class="btn btn-primary mt-4">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" data-toggle="tooltip" title="Reset" id="btnReset1" style=""
+                        class="btn btn-danger mt-4">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+        </fieldset>
+        <fieldset class="mt-3" style="border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Short Stay Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-2">
+                    <b>Short Stay No</b>
+                    <input type="text" id="txtAdmisssion" maxlength="10" style="" placeholder="Admission"
+                        class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <br />
+                    <button type="button" class="btn btn-primary mt-1" id="btnSearchAdmissionNo" data-toggle="tooltip"
+                        title="Search Patient Record">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+                <div class="col-sm-3">
+                    <b>OPD Card No.</b>
+                    <input type="text" id="txtOpdCardNo" maxlength="10" style="" placeholder="OPD Card No. "
+                        class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Casualty No.</b>
+                    <input type="text" id="txtCasualtyNo" maxlength="10" style="" placeholder="Casualty No."
+                        class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Date</b>
+                    <input type="text" id="txtDate" style="" placeholder="" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" data-toggle="tooltip" title="" id="btnBedOccupancyStatus" style=""
+                        class="btn btn-info mt-4" data-original-title="Search Bed Occupancy">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-4">
+                    <b>Source</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="Select2">
+                        <option value=""></option>
+                        <option value="OPD">OPD</option>
+                        <option value="CASUALTY">CASUALTY</option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <b>Referred By</b>
+                    <input type="text" id="txtReferredBy" style="" placeholder="Referred By " class="form-control" />
+                </div>
+                <div class="col-sm-4">
+                    <b>Validity</b>
+                    <input type="text" id="txtValidity" style="" placeholder="Validity" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Department</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlDepartment">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Doctor</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="txtDoctor">
+                        <option value=""></option>
+                    </select>
+                    <%-- <input type="text" id="txtDoctor" maxlength="10" style="" placeholder="Doctor" class="form-control" />--%>
+                </div>
+                <div class="col-sm-3">
+                    <b>Surgeon</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlSurgeon" multiple>
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Anesthetist</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlAnesthetist" multiple="multiple">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <%--<div class="col-sm-3">
+                    <b>Room Category</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlRoomCategory">
+                        <option>--Select Bed--</option>
+                    </select>
+                </div>--%>
+                <div class="col-sm-3">
+                    <b>Ward Category</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlWardCategory">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <b>Ward No.</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlWardNo">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <b>Room No</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlRoomNo">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Bed Category</b><span style="color: red; font-weight: bold;">*</span>
+                    <select class="form-control" id="ddlBedCategory">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <b>Bed No.</b><span style="color: red; font-weight: bold;">*</span>
+                    <select id="txtBedNo" class="form-control">
+                        <option value=""></option>
+                    </select>
+                    <%--<input type="text" id="txtBedNo" style="" placeholder="Bed No." class="form-control" />--%>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-2">
+                    <b>Old No.</b>
+                    <input type="text" id="txtOldNo" style="" placeholder="Old No." class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Gate Pass No.</b>
+                    <input type="text" id="txtGateNo" style="" placeholder="Gate Pass No." class="form-control" />
+                </div>
+                <%-- <div class="col-sm-1">
+                    <b>Short Stay</b>
+                    <input type="checkbox" style="zoom: 2.0;" name="chkSelectPop" id="chkShortStay" class="btn btn-info">
+                </div>--%>
+            </div>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ MLC Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-4">
+                    <b>MLC No.</b>
+                    <input type="text" id="txtMlcNo" style="" placeholder="MLC No." class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Date Time</b>
+                    <input type="text" id="txtMlcDateTime" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3 mt-3">
+                    <a href="#" id="adownload" target="_blank" style="display: none; white-space: nowrap"></a>
+                    <input type='file' class="btn btn-primary" style="" id="FileUpload1" />
+                </div>
+                <div class="col-sm-2">
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Documents Upload ]
+                </h6>
+            </legend>
+            <div id="grdDocumentDetail">
+            </div>
+            <table class='table table-bordered table-hover tblDocumentUpload' id='tblDocumentId'>
+                <thead style='font-size: 14px;'>
+                    <tr>
+                        <th class="text-center">File Name
+                        </th>
+                        <th class="text-center">Upload
+                        </th>
+                        <th class="text-center">Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id='Td1'>
+                        <td>
+                            <input type='text' class='form-control clsFileName' id='txtFileName1' placeholder='File Name' />
+                        </td>
+                        <td>
+                            <input type='file' class="btn btn-primary FileUpload" id="File1" />
+                            <a href="#" id="a1" target="_blank" class="documentLink"></a>
+                        </td>
+                        <td>
+                            <button type='button' id='btnDeleteDocument' onclick='DeleteRowDocument(1)' class='btn btn-danger'
+                                style='font-family: Calibri;'>
+                                <i class='fa fa-trash fa-lg' aria-hidden='true'></i>
+                            </button>
+                            &nbsp;
+                            <button type='button' id='btnPlusDocument1' onclick='AddRowDocument(1);' class='btn btn-primary btnclsPlusDocument'>
+                                <i class='fa fa-plus' aria-hidden='true'></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Patient Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>UHID</b>
+                    <input type="text" id="txtUhid" style="" placeholder="## UHID ##" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <br />
+                    <button type="button" id="btnAddNewPatientt1" data-toggle="tooltip" title="Add New Patient"
+                        class="btn btn-primary mt-1">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="col-sm-4">
+                    <b>Name</b><span style="color: red; font-weight: bold;">*</span>
+                    <input type="text" id="txtname" style="" placeholder="Name" class="form-control"
+                        disabled />
+                </div>
+                <div class="col-sm-3">
+                    <b>Mobile No.</b><span style="color: red; font-weight: bold;">*</span>
+                    <input type="text" id="txtMobile" style="" placeholder="Mobile No." maxlength="10" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <br />
+                    <button type="button" id="btnSearchUHIDDtl" data-toggle="tooltip" title="Search Patient"
+                        class="btn btn-primary mt-1">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Alternate Mobile No.</b>
+                    <input type="text" id="txtAlternateMob" style="" maxlength="10" placeholder="Alternate Mobile No."
+                        class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Gender</b><span style="color: red; font-weight: bold;">*</span>
+                    <input type="text" id="ddlGender" disabled="disabled" style="" placeholder="Gender"
+                        class="form-control" />
+                    <%--<select class="form-control" id="ddlGender">
+                        <option value="0">-- Select --</option>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>--%>
+                </div>
+                <div class="col-sm-3">
+                    <b>Date of Birth</b>
+                    <input type="text" id="txtDateOfBirth" style="" placeholder="Date of Birth" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <b>YY</b>
+                    <input type="text" id="txtyy" style="" placeholder=" YY " class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <b>MM</b>
+                    <input type="text" id="txtmm" style="" placeholder="MM" class="form-control" />
+                </div>
+                <div class="col-sm-1">
+                    <b>DD</b>
+                    <input type="text" id="txtdd" style="" placeholder=" DD " class="form-control" />
+                </div>
+            </div>
+            <br />
+            <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+                <legend style="color: Blue; font-family: Calibri;">
+                    <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Dependent Detail ]
+                    </h6>
+                </legend>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <b>Dependent Name</b>
+                        <input type="text" id="txtDependentName" style="" placeholder="Dependent Name" class="form-control" />
+                    </div>
+                    <div class="col-sm-3">
+                        <b>Relation with Dependent</b>
+                        <select class="form-control" id="ddlDependentRelation">
+                            <option value=""></option>
+                            <option value="Father">Father</option>
+                            <option value="Mother">Mother</option>
+                            <option value="Brother">Brother</option>
+                            <option value="Sister">Sister</option>
+                            <option value="Spouse">Spouse</option>
+                            <option value="Son">Son</option>
+                            <option value="Daughter">Daughter</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <b>Rank</b>
+                        <input type="text" id="txtDependentRank" style="" placeholder="Rank" class="form-control" />
+                    </div>
+                    <div class="col-sm-2">
+                        <b>PID No</b>
+                        <input type="text" id="txtDependentPidNo" style="" placeholder="PID No." class="form-control" />
+                    </div>
+                    <div class="col-sm-2">
+                        <b>P UNIT</b>
+                        <input type="text" id="txtDependentPunit" style="" class="form-control" />
+                    </div>
+                </div>
+            </fieldset>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Aadhaar No.</b>
+                    <input type="text" id="txtAadharNo" style="" placeholder="Aadhaar No." class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Marital Status</b>
+                    <select class="form-control" id="ddlmaritalStatus">
+                        <option value=""></option>
+                        <option value="1">Single</option>
+                        <option value="2">Married</option>
+                        <option value="3">Widow</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Religion</b>
+                    <select class="form-control" id="ddlReligion">
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <b>Email ID</b>
+                    <input type="text" id="txtEmail" style="" placeholder="Email ID" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Father/Husband</b>
+                    <input type="text" id="txtfatherHusband" style="" placeholder="Father/Husband" class="form-control"
+                        disabled>
+                </div>
+                <div class="col-sm-2">
+                    <b>Family Income</b>
+                    <input type="text" id="txtFamilyIncome" style="" placeholder="Family Income" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Occupation</b>
+                    <select class="form-control" id="ddlOccupation">
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <b>Diet</b>
+                    <select class="form-control" id="ddlDiet">
+                        <option value=""></option>
+                        <option value="Veg">Veg</option>
+                        <option value="Non Veg">Non Veg</option>
+                        <option value="Vegan">Vegan</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <b>Language of choice</b>
+                    <select class="form-control" id="ddlLanguage">
+                        <option value=""></option>
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Urdu">Urdu</option>
+                        <option value="Gujarati">Gujarati</option>
+                        <option value="Bengali">Bengali</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Punjabi">Punjabi</option>
+                        <option value="Assamese">Assamese</option>
+                        <option value="Malayalam">Malayalam</option>
+                        <option value="Kannada">Kannada</option>
+                    </select>
+                </div>
+                <div class="col-sm-1">
+                    <b>Literate</b> <i class="fa fa-square-o" id="chkUnchekLiterate" style="font-size: 24px; cursor: pointer; margin-top: 15px"></i>
+                </div>
+                <div class="container" id="EducationField" style="display: none">
+                    <div class="row clearfix">
+                        <div class="col-md-12 table-responsive">
+                            <div style="float: left">
+                            </div>
+                            <div id="divEducation">
+                                <br />
+                                <table class='table table-bordered table-hover tblEducation' id='tblEducationId'>
+                                    <thead style='font-size: 14px;'>
+                                        <tr>
+                                            <th class="text-center">Education
+                                            </th>
+                                            <th class="text-center">University
+                                            </th>
+                                            <th class="text-center">Marks
+                                            </th>
+                                            <th class="text-center">Passing Year
+                                            </th>
+                                            <th class="text-center">Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id='tr1'>
+                                            <td>
+                                                <input type='text' class='form-control clsEducation' id='txtEducation' placeholder='Education' />
+                                            </td>
+                                            <td>
+                                                <input type='text' class='form-control clsUniversity' id='txtUniversity' placeholder='University' />
+                                            </td>
+                                            <td>
+                                                <input type='text' class='form-control clsMarks' id='txtMarks' placeholder='Marks' />
+                                            </td>
+                                            <td>
+                                                <input type='text' class='form-control clsPassingYear' id='txtPassingYear' placeholder='Year' />
+                                            </td>
+                                            <td style="width: 120px">
+                                                <button type='button' id='btnDeleteEducation' onclick='DeleteRowEducation(1)' class='btn btn-danger'
+                                                    style='font-family: Calibri;'>
+                                                    <i class='fa fa-trash fa-lg' aria-hidden='true'></i>
+                                                </button>
+                                                &nbsp;
+                                                <button type='button' id='btnPlusEducation1' onclick='AddRowEducation(1);' class='btn btn-primary btnclsPlusEducation'>
+                                                    <i class='fa fa-plus' aria-hidden='true'></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Condition</b>
+                    <select class="form-control" id="ddlCondition">
+                        <option value=""></option>
+                        <option value="Normal">Normal</option>
+                        <option value="Good">Good</option>
+                        <option value="Unconscious">Unconscious</option>
+                        <option value="Critical">Critical</option>
+                        <option value="Serious">Serious</option>
+                        <option value="DeadonArrival">Dead on Arrival</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Patient Category</b><span style="color:red;font-size:15px">*</span>
+                    <select class="form-control" id="ddlPatientcategory">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3" id="asuhmanid">
+                    <%-- style="display: none;"--%>
+                    <b>AYUSHMAN CARD NO</b>
+                    <input type="text" id="txtaushmancardno" class="form-control" placeholder="Enter Card No" />
+                </div>
+                <div class="col-sm-3" id="idforbplcard" class="form-control">
+                    <%-- style="display: none;"--%>
+                    <b>BPL CARD NO</b>
+                    <input type="text" id="txtbplcardno" class="form-control" placeholder="Enter Card No" />
+                </div>
+                <div class="col-sm-3">
+                    <%-- style="display: none;"--%>
+                    <b>Company Name</b>
+                    <input type="text" id="txtCompanyName" style="" placeholder="Company Name" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Employee Id</b>
+                    <input type="text" id="txtEmployeeId" style="" placeholder="Employee Id" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Payer</b>
+                    <select class="form-control" id="ddlPayer">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row" id="divEsicInformation" style="display: none;">
+                <div class="col-sm-4">
+                    <b>ESIC No.</b>
+                    <input type="text" id="txtEsicNo" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Limit</b>
+                    <input type="text" id="txtEsicLimit" style="" class="form-control" />
+                </div>
+            </div>
+            <div class="row" id="divYojana" style="display: none;">
+                <div class="col-sm-4">
+                    <b>Ayushman Bharat Yojana No.</b>
+                    <input type="text" id="Text1" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Limit</b>
+                    <input type="text" id="Text2" style="" class="form-control" />
+                </div>
+            </div>
+            <div class="row" id="CompanyInfo" style="display: none;">
+                <div class="col-sm-4">
+                    <b>Company Name</b>
+                    <input type="text" id="txtCompanyName" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Limit</b>
+                    <input type="text" id="txtCompanyLimit" style="" class="form-control" />
+                </div>
+            </div>
+            <div class="row" id="HealthInsuranceInfo" style="display: none;">
+                <div class="col-sm-3">
+                    <b>Policy Name</b>
+                    <input type="text" id="txtPolicyName" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Policy No.</b>
+                    <input type="text" id="txtPolicyNo" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Policy Amount</b>
+                    <input type="text" id="Text3" style="" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Limit</b>
+                    <input type="text" id="txtPolicyLimit" style="" class="form-control" />
+                </div>
+            </div>
+            <fieldset id="InsuredFieldSet" style="display: none;">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <b>Insurance Company Name</b>
+                        <input type="text" id="txtInsuranceCompanyName" style="" placeholder="Insured Company Name"
+                            class="form-control" />
+                    </div>
+                    <div class="col-sm-3">
+                        <b>Policy Amount</b>
+                        <input type="text" id="txtPolicyAmount" style="" placeholder="Policy Amount" class="form-control" />
+                    </div>
+                    <div class="col-sm-3">
+                        <b>Policy No.</b>
+                        <input type="text" id="txtPolicyNo" style="" placeholder="Policy No." class="form-control" />
+                    </div>
+                </div>
+            </fieldset>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Demographic Details/General Details ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-2">
+                    <b>HT[cm]</b>
+                    <input type="text" id="txtHT" placeholder="Height" maxlength="50" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>WT[kg]</b>
+                    <input type="text" id="txtWT" placeholder="Weight" maxlength="50" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Blood Group</b>
+                    <input type="text" id="txtBloodGroup" placeholder="Blood Group" style="" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Apgar Score</b>
+                    <input type="text" id="txtApgarScore" placeholder="Apgar Score" maxlength="50" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Growth</b>
+                    <input type="text" id="txtGrowth" maxlength="50" placeholder="Growth" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Waist</b>
+                    <input type="text" id="txtWaist" placeholder="Waist" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-2">
+                    <b>Obesity</b>
+                    <input type="text" id="txtObesity" placeholder="Obesity" class="form-control" />
+                </div>
+            </div>
+            <br />
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Address Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-2">
+                    <b>House No.</b>
+                    <input type="text" id="txtHouseNo" style="" placeholder="House No." class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Street Name</b>
+                    <input type="text" id="txtStreetName" style="" placeholder="Street Name" class="form-control" />
+                </div>
+                <div class="col-sm-2">
+                    <b>Street No.</b>
+                    <input type="text" id="txtStreetNo" style="" placeholder="Street No." class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Landmark</b>
+                    <input type="text" id="txtLandmark" style="" placeholder="Landmark" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Locality</b>
+                    <select class="form-control" id="ddlLocality">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Country</b>
+                    <select class="form-control" id="ddlCountry">
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>State</b>
+                    <select class="form-control" id="ddlState">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>City</b>
+                    <select class="form-control" id="ddlCity">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Pin No.</b>
+                    <input type="text" id="txtPinNo" placeholder="Pin No." class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>R/Address</b>
+                    <textarea class="form-control" id="txtRaddress" rows="1"></textarea>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Next of Kin ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Name</b>
+                    <input type="text" id="txtkinName" style="" placeholder="Name" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Relation</b>
+                    <select class="form-control" id="ddlRelation">
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Mobile</b>
+                    <input type="text" id="txtKinMobile" style="" maxlength="10" placeholder="Mobile" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Telephone No.</b>
+                    <input type="text" id="txtKinTelNo" style="" placeholder="Telephone No." class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Address</b>
+                    <input type="text" id="txtKinAddress" style="" placeholder="Address" class="form-control" />
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Pregnancy Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-2">
+                    <br />
+                    <label style="font-weight: normal">
+                        <input type="checkbox" id="chkPregnancy" style="zoom: 1.5;" value="" />&nbsp; Pregnancy&nbsp;</label>
+                </div>
+                <div class="col-sm-2">
+                    <br />
+                    <label style="font-weight: normal; white-space: nowrap;">
+                        <input type="checkbox" id="chkParental" style="zoom: 1.5;" value="" />&nbsp; Prenatal
+                        Checkup&nbsp;</label>
+                </div>
+                <div class="col-sm-2">
+                    <br />
+                    <label style="font-weight: normal">
+                        <input type="checkbox" id="chkFulltTerm" style="zoom: 1.5;" value="" />&nbsp; Full
+                        Term&nbsp;</label>
+                </div>
+                <div class="col-sm-3">
+                    <b>Last Menstrual Date</b>
+                    <input type="text" id="txtlastMenstrualDate" style="" placeholder="Last Menstrual Date"
+                        class="form-control" disabled />
+                </div>
+                <div class="col-sm-3">
+                    <b>Estimated Delivery Date</b>
+                    <input type="text" id="txtEstDate" style="" placeholder="Estimated Delivery Date"
+                        class="form-control" disabled />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-9">
+                    <b>Notes</b>
+                    <textarea id="txtNotes" style="" placeholder="Notes" class="form-control" rows="2"
+                        cols="100"></textarea>
+                </div>
+                <div class="col-sm-3">
+                    <b>Transition Type</b>
+                    <select id="ddlVisitcategory" class="form-control">
+                        <%-- <option value="0">--Select--</option>--%>
+                        <option value="General">General</option>
+                        <option value="Complementary">Complementary</option>
+                        <option value="Free">Free</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset class="mt-3" style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[ Emergency Contact Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Name</b>
+                    <input type="text" id="txtEmergencyName" class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <b>Mobile</b>
+                    <input type="text" id="txtEmergencyMobile" class="form-control" maxlength="10" />
+                </div>
+                <div class="col-sm-6">
+                    <b>Address</b>
+                    <textarea id="txtEmergencyAddress" class="form-control" style="height: 38px;"></textarea>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset style="margin-top: 10px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">Patient Details</legend>
+            <div class="row">
+                <div class="col-sm-8">
+                </div>
+                <div class="col-sm-4">
+                    <button style="float: right; font-weight: bold; font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif; vertical-align: top; background-color: #DAE0E5; font-size: 12px;"
+                        class="btn btn-light"
+                        type="button" id="btnExpand">
+                        <i class="fa fa-minus" id="faExapand" style="color: #dc8c2a" aria-hidden="true"></i>&nbsp;<span class="btnspn">Collapse patient Details</span></button>
+                </div>
+            </div>
+
+            <div class="row mt-3" id="divPatientRemark" style="display:none">
+                <div class="col-sm-12">
+                    <b>Patient Remark</b>
+                    <textarea class="form-control" placeholder="Patient Remark" id="txtpatientrecord" rows="">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <fieldset style="border-width: thin; border-radius: 5px;" id="fldPatientDetails">
+                        <div id="tabs">
+                            <ul>
+                                <li><a href="#tabs-1" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Patient's Complaint</a></li>
+                                <li><a href="#tabs-2" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Patient Allergy</a></li>
+                                <li><a href="#tabs-3" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Patient's Past History</a></li>
+                                <li><a href="#tabs-4" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Patient's Personal History</a></li>
+                                <li><a href="#tabs-5" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Patient's Family History</a></li>
+                                <li><a href="#tabs-6" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Provisional Diagnosis</a></li>
+                                <li><a href="#tabs-7" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Advised Investigation</a></li>
+                                <li><a href="#tabs-8" style="font-size: medium; font-size: 12px; font-weight: bold; font-style: normal; font-variant: normal">Procedure</a></li>
+                            </ul>
+                            <div id="tabs-1" style="height: auto">
+                                <fieldset class="mt-3" style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <%--Tab 2 Info--%>
+                                            <table class="table table-bordered table-hover" id="tblComplaint" style="display: none;">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Complaints / Problems Reported
+                                                        </th>
+                                                        <th style="">Remarks (Comments)
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 450px;"></td>
+                                                        <td style="width: 450px;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table class="table table-bordered table-hover" id="tblComplaintN">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Complaints / Problems Reported
+                                                        </th>
+                                                        <th style="">Since
+                                                        </th>
+                                                        <th style="">Unit
+                                                        </th>
+                                                        <th style="">Remarks (Comments)
+                                                        </th>
+                                                        <th style="">Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <br />
+                                </fieldset>
+                            </div>
+                            <div id="tabs-2">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered table-hover" id="tblAllergy">
+                                            <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                <tr>
+                                                    <th style="">Allergy Details
+                                                    </th>
+                                                    <th style="">Allergy Type
+                                                    </th>
+                                                    <th style="">Since
+                                                    </th>
+                                                    <th style="">Unit
+                                                    </th>
+                                                    <th style="">Notes / Comments
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 250px;"></td>
+                                                    <td style=""></td>
+                                                    <td style=""></td>
+                                                    <td style=""></td>
+                                                    <td style=""></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                </div>
+                            </div>
+                            <div id="tabs-3">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <fieldset class="mt-3" style="border-width: thin; border-radius: 5px;">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table class="table table-bordered table-hover" id="tblPastHistory">
+                                                        <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                            <tr>
+                                                                <th style="">Past History
+                                                                </th>
+                                                                <th style="">Type
+                                                                </th>
+                                                                <th style="">Age Since (Yr)
+                                                                </th>
+                                                                <th style="">Notes / Comments
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="width: 250px;"></td>
+                                                                <td style=""></td>
+                                                                <td style=""></td>
+                                                                <td style=""></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tabs-4">
+                                <fieldset class="mt-3" style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tblPersonalHistory">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Habit
+                                                        </th>
+                                                        <th style="">Since
+                                                        </th>
+                                                        <th style="">Unit
+                                                        </th>
+                                                        <th style="">Qty
+                                                        </th>
+                                                        <th style="">Unit
+                                                        </th>
+                                                        <th style="">Notes / Comments
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 250px;"></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="tabs-5">
+                                <fieldset style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tblFamilyHistory">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Disease Name
+                                                        </th>
+                                                        <th style="">Disease Type
+                                                        </th>
+                                                        <th style="">Since
+                                                        </th>
+                                                        <th style="">Unit
+                                                        </th>
+                                                        <th style="">Relationship
+                                                        </th>
+                                                        <th style="">Notes / Comments
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 250px;"></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                        <td style=""></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="tabs-6">
+                                <fieldset style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tblDisease">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Diseases Name
+                                                        </th>
+                                                        <th style="">Since
+                                                        </th>
+                                                        <th style="">Unit
+                                                        </th>
+                                                        <th style="">Remarks (Comments)
+                                                        </th>
+                                                        <th style="">Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="tabs-7">
+                                <fieldset style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tblAdvisedInvestigation">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Investigation Name
+                                                        </th>
+                                                        <th style="">Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div id="tabs-8">
+                                <fieldset style="border-width: thin; border-radius: 5px;">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table class="table table-bordered table-hover" id="tblProcedure">
+                                                <thead style="font-family: Calibri; font-weight: normal; font-size: 12px;">
+                                                    <tr>
+                                                        <th style="">Procedure Name
+                                                        </th>
+                                                        <th style="">Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Special Instruction(s)</b>
+                    <textarea class="form-control" id="txtSplInstructions" rows="3"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Diagnosis</b>
+                    <textarea class="form-control" id="txtDiagnosis" rows="3"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Operation</b>
+                    <textarea class="form-control" id="txtOperation" rows="3"></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>History of Presenting Illness</b>
+                    <textarea class="form-control" id="txtPresentingIlness" rows="3" cols=""></textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <b>Treatment</b>
+                    <textarea class="form-control" id="txtTreatment" rows="3" cols=""></textarea>
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset style="margin-top: 3px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-weight: bold">[ Detail ]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-3">
+                    <b>Service Type</b>
+                    <select class="form-control" id="ddlServiceType">
+                        <option value=""></option>
+                        <option>OPD</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Service Category</b>
+                    <select class="form-control" id="ddlCategory">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <b>Service Name</b>
+                    <input type="text" id="txtServiceName" style="" placeholder="Enter Service Name"
+                        class="form-control" />
+                </div>
+                <div class="col-sm-3">
+                    <br />
+                    <button type="button" id="btnSearchDetail" data-toggle="tooltip" data-original-title="Search Services"
+                        class="btn btn-primary">
+                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;
+                    </button>
+                    <%--<button type="button" id="AddNewServiceType" style="" class="btn btn-primary">
+                        <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Services
+                    </button>--%>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="text" id="txtServiceCode" style="display: none" placeholder="##CODE##"
+                        class="form-control" />
+                </div>
+            </div>
+        </fieldset>
+        <br />
+        <fieldset id="fldConsultationServices" style="margin-top: 10px; border-width: thin; border-radius: 5px; font-family: Calibri; display: none;">
+            <legend style="color: Blue; font-family: Calibri;">
+                <h6 style="font-size: 14px; font-family: Calibri; font-weight: bold">[IPD Services]
+                </h6>
+            </legend>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div style="overflow: auto; width: 1158px;" id="divScrollN">
+                        <div id="divDRService">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset id="Fieldset1" style="margin-top: 10px; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <div class="row" style="">
+                <div class="col-sm-12">
+                    <fieldset style="margin-top: 3px; height: auto; border-width: thin; border-radius: 5px; font-family: Calibri">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <b>Paymode</b>
+                                <select class="form-control" id="ddlPaymode">
+                                    <option value=""></option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Card">Card</option>
+                                    <option value="Cheque/Draft">Cheque/Draft</option>
+                                    <option value="Wallet">Wallet</option>
+                                    <option value="NEFT">NEFT</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-4">
+                                <b>Deposite Amount</b>
+                                <input type="text" id="txtPaidAmt" style="text-align: right" value="0" onchange="CalculatePaidAmount();"
+                                    class="form-control">
+                            </div>
+                            <%--<div class="col-sm-4">
+                                <b>Balance Amount</b>
+                                <input type="text" id="txtBalanceAmount" readonly="readonly" value="0" style="text-align: right; font-weight: bold; color: Blue;"
+                                    class="form-control">
+                            </div>--%>
+                        </div>
+                        <%--<br />--%>
+                        <div class="row" style="display: none">
+                            <div class="col-sm-4">
+                                <b>Invoice Discount</b>
+                                <input type="text" id="txtInvoiceDiscAmount" value="0" style="text-align: right"
+                                    onchange="CalculateInvoiceDiscount();" class="form-control">
+                            </div>
+                            <div class="col-sm-4">
+                                <b>Transition Type</b>
+                                <select id="Select1" class="form-control">
+                                    <%--<option value="0">--Select--</option>--%>
+                                    <option value="General">General</option>
+                                    <option value="Complementary">Complementary</option>
+                                    <option value="Free">Free</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" style="display: none;" id="divCash">
+                            <div class="col-sm-3">
+                                <b>Date</b>
+                                <input type="text" id="txtCashDepositerDate" class="form-control txtCashDepositerDate">
+                            </div>
+                            <div class="col-sm-3">
+                                <b>Time</b>
+                                <input type="time" id="txtCashDepositerTime" class="form-control txtCashDepositerTime">
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Depositer Name</b>
+                                <input type="text" id="txtCashDepositerName" class="form-control txtCashDepositerName">
+                            </div>
+                        </div>
+                        <div class="row" style="display: none;" id="DivCard">
+                            <div class="col-sm-5">
+                                <b>Bank Name</b>
+                                <input type="text" id="txtCardName" class="form-control txtCashDepositerName">
+                            </div>
+                            <div class="col-sm-7">
+                                <b>Transition No.</b>
+                                <input type="text" id="txtCardNo" class="form-control txtCashDepositerName">
+                            </div>
+                        </div>
+                        <div class="row" style="display: none;" id="divChequeDraft">
+                            <div class="col-sm-5">
+                                <b>Bank Name</b>
+                                <input type="text" id="txtChequeBankName" class="form-control txtChequeBankName">
+                            </div>
+                            <div class="col-sm-7">
+                                <b>Transition No.</b>
+                                <input type="text" id="txtChequeBankNo" class="form-control txtChequeBankNo">
+                            </div>
+                        </div>
+                        <div class="row" style="display: none;" id="divWallet">
+                            <div class="col-sm-5">
+                                <b>Bank Name</b>
+                                <input type="text" id="txtWalletName" class="form-control txtWalletName">
+                            </div>
+                            <div class="col-sm-7">
+                                <b>Transition No.</b>
+                                <input type="text" id="txtWalletTransitionNo" class="form-control txtWalletTransitionNo.">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-4">
+                    <fieldset style="margin-top: 3px; height: auto; border-width: thin; border-radius: 5px; font-family: Calibri; display: none">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <b>Amount</b>
+                                <input type="text" readonly="readonly" style="text-align: right; font-weight: bold; color: Blue;"
+                                    id="txtAmount" value="0" class="form-control">
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Discount</b>
+                                <input type="text" id="txtDiscount" readonly="readonly" style="text-align: right"
+                                    onchange="MainDiscountChange();" value="0" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 8px;">
+                            <div class="col-sm-6">
+                                <b>Taxable Amount</b>
+                                <input type="text" id="txtTaxableAmount" readonly="readonly" style="text-align: right"
+                                    onchange="MainTaxableAmount();" value="0" class="form-control">
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Tax. Amount</b>
+                                <input type="text" id="txtTaxAmount" readonly="readonly" style="text-align: right"
+                                    onchange="MainTaxAmount();" value="0" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col-sm-6">
+                                <b>Cash Discount</b>
+                                <input type="text" id="txtSplDiscount" value="0" readonly="readonly" style="text-align: right"
+                                    onchange="MainSplDiscount();" class="form-control">
+                            </div>
+                            <div class="col-sm-6">
+                                <b>Net. Amount</b>
+                                <input type="text" readonly="readonly" value="0" style="text-align: right; font-weight: bold; color: Blue;"
+                                    id="txtNetAmount" class="form-control">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </fieldset>
+        <%--<fieldset style="margin-top: 3px; height: auto; border-width: thin; border-radius: 5px; font-family: Calibri">
+            <div class="row">
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-8">
+                    <button type="button" id="btnUpdateDemographic" style="display: none; background-color: #385d8a" class="btn btn-primary mybtn">
+                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Update Demographic
+                    </button>
+                    <button type="button" data-loading-text="Saving..." id="btnSaveAdmission" style=""
+                        class="btn btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Save
+                    </button>
+                    <button type="button" data-loading-text="Updating..." id="btnUpdateAdmission" class="btn btn-info">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp; Update
+                    </button>
+                    <button type="button" id="btnReset" style="" class="btn btn-danger">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                    </button>
+                    <button type="button" id="btnPrintPDF" style="display: none;" class="btn btn btn-success ml-1">
+                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;&nbsp;Print
+                    </button>
+                </div>
+            </div>
+        </fieldset>--%>
+        <br />
+        <br />
+        <br />
+    </div>
+    <%--MODAL TO SEARCH THROUGH 3 FIELDS--%>
+    <div id="myModalSearchPatient" class="modal fade" role="dialog" style="height: auto; font-family: Calibri;">
+        <div id="div2" class="alert alert-danger" style="width: 470px; position: absolute; margin-top: 45px; background-color: #CB4335; border: none; margin-left: 390px; display: none; z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+            <span id="Span1" style="font-weight: bold; font-family: Calibri; color: White;" class="spnerrormsg">Hello this is Error Message. </span>
+        </div>
+        <div class="modal-dialog modal-dialog-centered" style="width: 1240px;">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" style="font-weight: bold; font-size: 15px;">Search Patient</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 100%">
+                    <div class="panel panel-default" style="width: 100%; height: auto;">
+                        <div class="panel-body">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        UHID
+                                        <input type="text" class="form-control" id="txtUHIDPop" style="" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Name
+                                        <input type="text" class="form-control" id="txtNamePop" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Mobile
+                                        <input type="text" class="form-control" id="txtMobilePop" maxlength="10" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <br />
+                                        <button type="button" id="btnSearchPatient" style="font-weight: bold;" class="btn btn-primary">
+                                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Go
+                                        </button>
+                                        <button type="button" id="btnResetPop" style="" class="btn btn-danger">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="Div5" style="height: auto;">
+                        <div class="panel-body" style="height: auto;">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div id="divSearchPatient">
+                                            <i class="fa fa-refresh fa-spin"></i>&nbsp; <span style="color: Blue; font-weight: bold;">Loading...Please wait</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:none">
+                    <%--<button type="button" id="btnUpdateLastP" class="btn btn-success">
+                        <i class="fa fa-check" aria-hidden="true"></i>&nbsp; Update</button>--%>
+                    <button type="button" id="btnCloseP" class="btn btn-default" data-dismiss="modal">
+                        Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--MODAL TO ADD NEW PATIENT--%>
+    <div id="myModalAddNewPatient" class="modal fade" role="dialog" style="height: auto; font-family: Calibri;">
+        <div id="alert" class="alert alert-danger" style="width: 470px; position: absolute; margin-top: 45px; background-color: #CB4335; border: none; margin-left: 390px; display: none; z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+            <span id="Span2" style="font-weight: bold; font-family: Calibri; color: White;" class="spnerrormsg">Hello this is Error Message. </span>
+        </div>
+        <div class="modal-dialog modal-dialog-centered" style="width: 1100px;">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" style="font-weight: bold; font-size: 15px;">Add New Patient</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 100%">
+                    <div class="panel panel-default" style="width: 100%; height: auto;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <b>Patient Category</b>
+                                    <select class="form-control" id="ddlPatientcategoryNewPatient">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <fieldset class="mt-2" id="fldPatientData" style="border-width: thin; border-radius: 5px; font-family: Calibri; display: none;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <b>Name</b><span style="color: red; font-weight: bolder;">*</span>
+                                        <input type="text" class="form-control" id="txtNewNamePop" style="" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <b>Age YY</b><span style="color: red; font-weight: bolder;">*</span>
+                                        <input type="text" class="form-control" id="txtNewAgePop" maxlength="3" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <b>Age DD</b>
+                                        <input type="text" class="form-control" id="txtNewAgeDD" maxlength="3" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <b>Age MM</b>
+                                        <input type="text" class="form-control" id="txtNewAgeMM" maxlength="3" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Gender</b><span style="color: red; font-weight: bolder;">*</span>
+                                        <select class="form-control" id="ddlNewGenderPop">
+                                            <option value=""></option>
+                                            <option value="M" selected="selected">Male</option>
+                                            <option value="F">Female</option>
+                                            <option value="O">Others</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Department</b><span style="color: red; font-weight: bolder;">*</span>
+                                        <select class="form-control" id="ddlDepartmentPop">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" id="divDependent">
+                                    <div class="col-sm-5">
+                                        <b>NAME (Dependent On OR Brought By)</b>
+                                        <input type="text" class="form-control" id="txtDependentNamePop" />
+                                    </div>
+                                    <div class="col-sm-5" id="divcolDependent">
+                                        <b>Relation With Dependent</b>
+                                        <select class="form-control" id="ddlRelationDependentPop">
+                                            <option value=""></option>
+                                            <option value="Father">Father</option>
+                                            <option value="Mother">Mother</option>
+                                            <option value="Brother">Brother</option>
+                                            <option value="Sister">Sister</option>
+                                            <option value="Spouse">Spouse</option>
+                                            <option value="Son">Son</option>
+                                            <option value="Daughter">Daughter</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3" style="display: none;">
+                                        <b>Locality</b>
+                                        <select class="form-control" id="ddlNewLocalityPop">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3" style="display: none;">
+                                        <b>Aadhaar No.</b>
+                                        <input type="text" class="form-control" id="txtNewAadharPop" maxlength="12" />
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-sm-3">
+                                        <b>Rank</b>
+                                        <input type="text" class="form-control" id="txtPRankPop" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>PID No</b>
+                                        <input type="text" class="form-control" id="txtPIDNoPop" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Unit</b>
+                                        <input type="text" class="form-control" id="txtPUnitPop" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Mobile No.</b><span style="color: red; font-weight: bolder;">*</span>
+                                        <input type="text" class="form-control" id="txtNewMobilePop" maxlength="10" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveNewPatient" style="" class="btn btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Save
+                    </button>
+                    <button type="button" id="btnResetNewPatient" style="" class="btn btn-danger">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                    </button>
+                    <button type="button" id="btnCloseNewPatient" style="display:none" data-dismiss="modal" class="btn btn-default">
+                        &nbsp;&nbsp;Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%-- <div id="myModalAddNewPatient1" class="modal fade" role="dialog" style="height: 1024px;
+        font-family: Calibri;">
+        <div id="alert" class="alert alert-danger" style="width: 470px; position: absolute;
+            margin-top: 45px; background-color: #CB4335; border: none; margin-left: 390px;
+            display: none; z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);
+            -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+            <span id="Span2" style="font-weight: bold; font-family: Calibri; color: White;" class="spnerrormsg">
+                Hello this is Error Message. </span>
+        </div>
+        <div class="modal-dialog" style="width: 1100px;">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" style="font-weight: bold; font-size: 15px;">
+                        Add New Patient</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 100%">
+                    <div class="panel panel-default" style="width: 100%; height: auto;">
+                        <div class="panel-body">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <b>Name</b>
+                                        <input type="text" class="form-control" id="txtNewNamePop" style="" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Gender</b>
+                                        <select class="form-control" id="ddlNewGenderPop">
+                                            <option value="0">-- Select --</option>
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                            <option value="O">Others</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Age</b>
+                                        <input type="text" class="form-control" id="txtNewAgePop" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Aadhaar No.</b>
+                                        <input type="text" class="form-control" id="txtNewAadharPop" maxlength="12" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Mobile No.</b>
+                                        <input type="text" class="form-control" id="txtNewMobilePop" maxlength="10" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Locality</b>
+                                        <select class="form-control" id="ddlNewLocalityPop">
+                                            <option value="0">-- Select Locality --</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Patient Category</b>
+                                        <select class="form-control" id="ddlPatientcategoryNewPatient">
+                                            <option value="0">-- Select Category --</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3" id="IdforaushmanP" style="display: none;">
+                                        <b>AYUSHMAN CARD NO</b>
+                                        <input type="text" id="txtaushman_cardNo" class="form-control" placeholder="Enter Card No" />
+                                    </div>
+                                    <div class="col-sm-3" id="idforbplcardno" style="display: none;">
+                                        <b>BPL CARD NO</b>
+                                        <input type="text" id="txtbplcard_no" class="form-control" placeholder="Enter Card No" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveNewPatient" style="" class="btn btn-primary">
+                        <i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Save
+                    </button>
+                    <button type="button" id="btnResetNewPatient" style="" class="btn btn-danger">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                    </button>
+                    <button type="button" id="btnCloseNewPatient" style="" data-dismiss="modal" class="btn btn-default">
+                        &nbsp;&nbsp;Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>--%>
+    <div id="myModalAddItemDetail" class="modal fade" role="dialog" style="height: auto;">
+        <div class="modal-dialog modal-dialog-centered" style="width: 800px;">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Searh Item</h6>
+                    <button type="button" id="btnmodclose1" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 740px;">
+                    <div class="panel panel-default" style="width: 760px; height: auto;">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <b>Service Type</b>
+                                    <select class="form-control" id="ddlServiceTypeDetail">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <b>Service Category</b>
+                                    <select class="form-control" id="ddlCategoryDetail">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <b>Service Name</b>
+                                    <input type="text" class="form-control" id="txtServiceNameDetail" placeholder=" Name " />
+                                </div>
+                                <div class="col-sm-2">
+                                    <br />
+                                    <button type="button" id="btnDetailGo" style="margin-left: 5px;" class="btn btn-primary">
+                                        <i class="fa fa-search" aria-hidden="true"></i>&nbsp;Go
+                                    </button>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-content">
+                    <br />
+                    <div class="panel panel-default" style="width: 790px; height: auto;">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div id="divSearchBindK" style="">
+                                    <table class="table table-bordered table-hover" id="tblSearchInfoDetail">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Service Type
+                                                </th>
+                                                <th>Service Category
+                                                </th>
+                                                <th>Service Name
+                                                </th>
+                                                <th>Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnSelectServiceDetail1" style="" class="btn btn-primary">
+                            <i class="fa fa-check " aria-hidden="true"></i>&nbsp;&nbsp; Select Services
+                        </button>
+                    </div>
+                    <div class="panel panel-default" id="Div3" style="width: 760px; height: auto; display: none">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div id="div48">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--MODAL TO SEARCH THROUGH 7 FIELDS--%>
+    <div id="myModalForSearch" class="modal fade" role="dialog" style="height: auto; font-family: Calibri;">
+        <div id="div4" class="alert alert-danger" style="width: 470px; position: absolute; margin-top: 45px; background-color: #CB4335; border: none; margin-left: 390px; display: none; z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+            <span id="Span4" style="font-weight: bold; font-family: Calibri; color: White;" class="spnerrormsg">Hello this is Error Message. </span>
+        </div>
+        <div class="modal-dialog modal-dialog-centered" style="width: 1240px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" style="font-weight: bold; font-size: 15px;">Search Patient</h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 100%">
+                    <div class="panel panel-default" style="width: 100%; height: auto;">
+                        <div class="panel-body">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <b>UHID</b>
+                                        <input type="text" id="txtUHIDPop1" class="form-control" placeholder="UHID" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>OPD.NO</b>
+                                        <input type="text" id="txtOPDNoPop1" class="form-control" placeholder="OPD.NO" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>IPD No</b>
+                                        <input type="text" id="txtIPDPop1" class="form-control" placeholder="IPD No" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Casualty No.</b>
+                                        <input type="text" id="txtCasualtyPop1" class="form-control" placeholder="Casualty No." />
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-3">
+                                        <b>Name</b>
+                                        <input type="text" id="txtNamePop1" class="form-control" placeholder="Name" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Mobile</b>
+                                        <input type="text" id="txtMobilePop1" class="form-control" placeholder="Mobile" maxlength="10" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>PID NO</b>
+                                        <input type="text" id="txtAdhaarnoPop1" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <br />
+                                        <button type="button" id="btnSearchPatientPop1" style="font-weight: bold;" class="btn btn-primary">
+                                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Go
+                                        </button>
+                                        <button type="button" id="btnResetPop1" style="" class="btn btn-danger">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="Div6" style="height: auto;">
+                        <div class="panel-body" style="height: auto;">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div id="divSearchAllRecord">
+                                            <i class="fa fa-refresh fa-spin"></i>&nbsp; <span style="color: Blue; font-weight: bold;">Loading...Please wait</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:none">
+                    <button type="button" id="btnClosePop1" class="btn btn-default" data-dismiss="modal">
+                        Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%--MODAL TO SEARCH THROUGH ADMISSION--%>
+    <div id="myModalForAdmissionNo" class="modal fade" role="dialog" style="height: auto; font-family: Calibri;">
+        <div id="div7" class="alert alert-danger" style="width: 470px; position: absolute; margin-top: 45px; background-color: #CB4335; border: none; margin-left: 390px; display: none; z-index: 999; -webkit-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); -moz-box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35); box-shadow: -7px 3px 15px -1px rgba(0,0,0,0.35);">
+            <span id="Span3" style="font-weight: bold; font-family: Calibri; color: White;" class="spnerrormsg">Hello this is Error Message. </span>
+        </div>
+        <div class="modal-dialog modal-dialog-centered" style="width: 1240px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" style="font-weight: bold; font-size: 15px;">Search </h6>
+                    <button type="button" class="close" data-dismiss="modal">
+                        &times;</button>
+                </div>
+                <div class="modal-body" style="width: 100%">
+                    <div class="panel panel-default" style="width: 100%; height: auto;">
+                        <div class="panel-body">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <b>UHID</b>
+                                        <input type="text" id="txtAdmUhidPop" class="form-control" placeholder="UHID" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>PID No</b>
+                                        <input type="text" id="txtAdmPidNoPop" class="form-control" placeholder="PID No" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Short Stay No</b>
+                                        <input type="text" id="txtAdmNoPop" class="form-control" placeholder="Short Stay No" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>Name</b>
+                                        <input type="text" id="txtAdmNamePop" class="form-control" placeholder="Name" />
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-sm-3">
+                                        <b>Mobile</b>
+                                        <input type="text" id="txtAdmMobilePop" class="form-control" placeholder="Mobile No." maxlength="10" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>From Date</b>
+                                        <input type="text" id="txtAdmFromDatePop" class="form-control" placeholder="From Date" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b>To Date </b>
+                                        <input type="text" id="txtAdmToDatePop" class="form-control" placeholder="To Date" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <br />
+                                        <button type="button" id="btnSearchAdmissionNoPop" style="font-weight: bold;" class="btn btn-primary">
+                                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;Go
+                                        </button>
+                                        <button type="button" id="btnResetAdmissionNoPop" style="" class="btn btn-danger">
+                                            <i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;&nbsp;Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="panel panel-default" id="Div8" style="height: auto;">
+                        <div class="panel-body" style="height: auto;">
+                            <fieldset style="border-width: thin; border-radius: 5px; font-family: Calibri;">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div id="divSearchAdmission">
+                                            <i class="fa fa-refresh fa-spin"></i>&nbsp; <span style="color: Blue; font-weight: bold;">Loading...Please wait</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="display:none">
+                    <button type="button" id="btnCloseAdmPop" class="btn btn-default" data-dismiss="modal">
+                        Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</asp:Content>

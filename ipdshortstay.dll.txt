@@ -1,0 +1,1954 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Data;
+using System.Globalization;
+using System.Web;
+using HMS.BuisinessFramework;
+
+namespace HMS.BuisinessFramework
+{
+    public class IPDAdmissionDLL
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        static string ecrconstr = ConfigurationManager.ConnectionStrings["MoonrakerConnectionString1"].ToString();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        static SqlConnection conn;
+        static SqlCommand cmd;
+
+        //----------------------------BIND DROPDOWNS---------------------------------------//
+
+        public DataSet GetDepartment()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_DEPARTMENT_LIST", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetPatientCategory()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_PATIENT_CATEGORY_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetRoomNo(string DEPARTMENT_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_SAVE_ROOMNO]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET ROOMNO"));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetDoctorRoomList(string DEPARTMENT)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_ROOMNO", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET ROOMNO"));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+        public DataSet GetWardNo()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_WARD_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH WARD"));
+            cmd.Parameters.Add(new SqlParameter("@MODULE", HttpContext.Current.Session["MODULE_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetReligion()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_RELIGION_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetRelation()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_RELATION_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetOccupation()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_OCCUPATION_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetLocality()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_LOCALITY_LIST]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetCountry()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_COUNTRY_LIST", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetState(string COUNTRY_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_STATE", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH STATE"));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY", COUNTRY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetCity(string STATE_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_CITY", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET CITY"));
+            cmd.Parameters.Add(new SqlParameter("@STATE_CODE", STATE_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetPinCode(string CITY_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_CITY", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET PIN"));
+            cmd.Parameters.Add(new SqlParameter("@CITY_CODE", CITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //------------------------------------------------------------------------------------//
+
+        //GETTING DATA THROUGH UHID
+        public DataSet GetUHID(string UHID, string NAME, string MOBILE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_PATIENT_DETAIL", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH UHID"));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@FNAME", NAME));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE_NO", MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        ////SEARCHING THROUGH 7 FIELDS
+        //public DataSet GetAllRecord(string SEARCH_UHID, string SEARCH_NAME, string SEARCH_MOBILE, string SEARCH_OPD, string SEARCH_IPD, string SEARCH_AADHAAR, string SEARCH_CASUALTY)
+        //{
+        //    DataSet strResultstring = new DataSet();
+        //    conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+        //    cmd = new SqlCommand("[UDSP_GET_CASUALITY_LIST]", conn);
+        //    cmd.CommandType = CommandType.StoredProcedure;
+        //    cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ALL_RECORD"));
+        //    cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+        //    cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_UHID", SEARCH_UHID));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_NAME", SEARCH_NAME));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_MOBILE", SEARCH_MOBILE));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_OPD", SEARCH_OPD));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_IPD", SEARCH_IPD));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_AADHAAR", SEARCH_AADHAAR));
+        //    cmd.Parameters.Add(new SqlParameter("@SEARCH_CASUALTY", SEARCH_CASUALTY));
+        //    conn.Open();
+        //    try
+        //    {
+        //        SqlDataAdapter da = new SqlDataAdapter(cmd);
+        //        da.Fill(strResultstring);
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //    }
+        //    finally
+        //    {
+        //        conn.Close();
+        //    }
+        //    return strResultstring;
+        //}
+        //SEARCHING THROUGH 7 FIELDS
+
+        public DataSet GetAllRecord(string SOURCE, string SEARCH_UHID, string SEARCH_NAME, string SEARCH_MOBILE, string SEARCH_OPD, string SEARCH_IPD, string SEARCH_AADHAAR, string SEARCH_CASUALTY)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ALL_RECORD"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@SOURCE", SOURCE));
+            cmd.Parameters.Add(new SqlParameter("@UHID", SEARCH_UHID));
+            cmd.Parameters.Add(new SqlParameter("@NAME", SEARCH_NAME));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", SEARCH_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@OPD_CARD_NO", SEARCH_OPD));
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", SEARCH_IPD));
+            cmd.Parameters.Add(new SqlParameter("@ADHAR_NO", SEARCH_AADHAAR));
+            cmd.Parameters.Add(new SqlParameter("@CASUALTY_NO", SEARCH_CASUALTY));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //GETTING DATA OF NEW RECORD
+        public DataSet GetNewUHID(string UHID)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GETNEWRECORD"));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //GETTING DATA THROUGH ADMISSION_NO
+        public DataSet SearchAdmissionList(string UHID, string PID_NO, string ADMISSION_NO, string NAME, string MOBILE, string FROM_DATE, string TO_DATE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_SAVE_IPD_ADMISSION]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ADMISSION"));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", ADMISSION_NO));
+            cmd.Parameters.Add(new SqlParameter("@NAME", NAME));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", MOBILE));     
+
+            cmd.Parameters.Add(new SqlParameter("@FROM_DATE", FROM_DATE));
+            cmd.Parameters.Add(new SqlParameter("@TO_DATE", TO_DATE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //GETTING DATA THROUGH ADMISSION_NO
+        public DataSet GetEditRecordList(string ADMISSION_NO)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_WEB_SAVE_IPD_ADMISSION]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_EXISTING_ADMISSION_NO"));
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", ADMISSION_NO));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //SAVING NEW RECORD
+        public string SaveNewPatientRecordList(string FNAME, string GENDER, string AGE_YY, string ADHAR_NO, string MOBILE, string LOCALITY_CODE, string LOCALITY_NAME, string PATIENT_CATEGORY, string AUSHMAN_CARD_NO, string BPL_CARD_NO)
+        {
+            string strResultstring = string.Empty;
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SAVENEWPATIENTRECORD"));
+            cmd.Parameters.Add(new SqlParameter("@FNAME", FNAME));
+            cmd.Parameters.Add(new SqlParameter("@GENDER", GENDER));
+            cmd.Parameters.Add(new SqlParameter("@AGE_YY", AGE_YY));
+            cmd.Parameters.Add(new SqlParameter("@ADHAR_NO", ADHAR_NO));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_CODE", LOCALITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_NAME", LOCALITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY", PATIENT_CATEGORY));
+            cmd.Parameters.Add(new SqlParameter("@AUSHMAN_CARD_NO", AUSHMAN_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@BPL_CARD_NO", BPL_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                strResultstring = Convert.ToString(cmd.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public string SaveList(string ADMISSION_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string AUSHMAN_CARD_NO, string BPL_CARD_NO, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT, string WARD_NAME,
+             string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE,
+              string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS)
+        {
+            string strResultstring = string.Empty;
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+
+            if (!string.IsNullOrEmpty(DATE))
+            {
+                DateTime dt = DateTime.ParseExact(DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DATE", dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(VALIDITY))
+            {
+                DateTime _validity = DateTime.ParseExact(VALIDITY, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@VALIDITY", _validity));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@VALIDITY", ""));
+            }
+            if (!string.IsNullOrEmpty(MLC_DATETIME))
+            {
+                DateTime _mlc_DateTime = DateTime.ParseExact(MLC_DATETIME, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@MLC_DATETIME", _mlc_DateTime));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@MLC_DATETIME", ""));
+            }
+
+            if (!string.IsNullOrEmpty(LAST_MANTURAL_DATE))
+            {
+                DateTime last_del_dt = DateTime.ParseExact(LAST_MANTURAL_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@LAST_MANTURAL_DATE", last_del_dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@LAST_MANTURAL_DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(EST_DELIVARY_DATE))
+            {
+                DateTime est_dt = DateTime.ParseExact(EST_DELIVARY_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@EST_DELIVARY_DATE", est_dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@EST_DELIVARY_DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(DOB))
+            {
+                DateTime _dob = DateTime.ParseExact(DOB, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DOB", _dob));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DOB", ""));
+            }
+
+
+
+            if (!string.IsNullOrEmpty(DEPOSITE_DATE))
+            {
+                DateTime _deposite_date = DateTime.ParseExact(DEPOSITE_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DEPOSITE_DATE", _deposite_date));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DEPOSITE_DATE", ""));
+            }
+
+
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SAVE"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_ID", HttpContext.Current.Session["USER_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_NAME", HttpContext.Current.Session["USER_NAME"]));
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", ADMISSION_NO));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_NAME", DEPARTMENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OPD_CARD_NO", OPD_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@CASUALTY_NO", CASUALTY_NO));
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_CODE", DOCTOR_CODE));
+
+            cmd.Parameters.Add(new SqlParameter("@SPECIAL_INSTRUCTION", SPECIAL_INSTRUCTION));
+            cmd.Parameters.Add(new SqlParameter("@OPERATION", OPERATION));
+            cmd.Parameters.Add(new SqlParameter("@DIAGNOSIS", DIAGNOSIS));
+
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_NAME", DOCTOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_CODE", REFERRED_BY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_NAME", REFERRED_BY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OLD_NO", OLD_NO));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@BED_NO", BED_NO));
+            cmd.Parameters.Add(new SqlParameter("@GATE_PASS_NO", GATE_PASS_NO));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_NO_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_NAME", ROOM_NO_NAME));
+            cmd.Parameters.Add(new SqlParameter("@MLC_NO", MLC_NO));
+            cmd.Parameters.Add(new SqlParameter("@MLC_URL", MLC_URL));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@NAME", NAME));
+            cmd.Parameters.Add(new SqlParameter("@GENDER", GENDER));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@ALTERNATE_MOBILE", ALTERNATE_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@AGE_YY", AGE_YY));
+            cmd.Parameters.Add(new SqlParameter("@AGE_MM", AGE_MM));
+            cmd.Parameters.Add(new SqlParameter("@AGE_DD", AGE_DD));
+            cmd.Parameters.Add(new SqlParameter("@IS_LITERATE", IS_LITERATE));
+            cmd.Parameters.Add(new SqlParameter("@LANGUAGE_OF_CHOICE", LANGUAGE_OF_CHOICE));
+            cmd.Parameters.Add(new SqlParameter("@AADHAAR_NO", AADHAAR_NO));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_CODE", RELIGION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_NAME", RELIGION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@MARITAL_STATUS", MARITAL_STATUS));
+            cmd.Parameters.Add(new SqlParameter("@EMAIL", EMAIL));
+            cmd.Parameters.Add(new SqlParameter("@GUARDIAN", GUARDIAN));
+            cmd.Parameters.Add(new SqlParameter("@FAMILY_INCOME", FAMILY_INCOME));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_CODE", PATIENT_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_NAME", PATIENT_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@AUSHMAN_CARD_NO", AUSHMAN_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@BPL_CARD_NO", BPL_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@COMPANY_NAME", COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMPLOYEE_ID", EMPLOYEE_ID));//PAID_AMOUNT
+            cmd.Parameters.Add(new SqlParameter("@PAID_AMOUNT", PAID_AMOUNT));
+
+            cmd.Parameters.Add(new SqlParameter("@INSURANCE_COMPANY_NAME", INSURANCE_COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_NUMBER", POLICY_NUMBER));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_AMOUNT", POLICY_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_CODE", OCCUPATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_NAME", OCCUPATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@DIET", DIET));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CONDITION", PATIENT_CONDITION));
+            cmd.Parameters.Add(new SqlParameter("@HEIGHT", HEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@WEIGHT", WEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@BLOOD_GROUP", BLOOD_GROUP));
+            cmd.Parameters.Add(new SqlParameter("@APGAR", APGAR));
+            cmd.Parameters.Add(new SqlParameter("@GROWTH", GROWTH));
+            cmd.Parameters.Add(new SqlParameter("@WAIST", WAIST));
+            cmd.Parameters.Add(new SqlParameter("@OBESITY", OBESITY));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_CODE", LOCALITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_NAME", LOCALITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@ADDRESS", ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@HOUSE_NO", HOUSE_NO));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NAME", STREET_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NO", STREET_NO));
+            cmd.Parameters.Add(new SqlParameter("@LANDMARK", LANDMARK));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_CODE", COUNTRY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_NAME", COUNTRY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STATE_CODE", STATE_CODE));
+            cmd.Parameters.Add(new SqlParameter("@STATE_NAME", STATE_NAME));
+            cmd.Parameters.Add(new SqlParameter("@CITY_CODE", CITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@CITY_NAME", CITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@PIN", PIN));
+            cmd.Parameters.Add(new SqlParameter("@KIN_NAME", KIN_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_CODE", KIN_RELATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_NAME", KIN_RELATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_CONTACT_NO", KIN_CONTACT_NO));
+            cmd.Parameters.Add(new SqlParameter("@PHONE", PHONE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_ADDRESS", KIN_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@PREGNANCY", PREGNANCY));
+            cmd.Parameters.Add(new SqlParameter("@PRENATAL_CHECKUP", PRENATAL_CHECKUP));
+            cmd.Parameters.Add(new SqlParameter("@FULLTERM", FULLTERM));
+            cmd.Parameters.Add(new SqlParameter("@NOTE", NOTE));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_TYPE", TRANSITION_TYPE));
+
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA", XML_REQUEST));
+            cmd.Parameters.Add(new SqlParameter("@XML_CONSULTATION_DATA", XML_CONSULTATION));
+
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_ALLERGY", XML_DATA_ALLERGY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PAST_HISTORY", XML_DATA_PAST_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PERSONAL_HISTORY", XML_DATA_PERSONAL_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_DISEASE", XML_DATA_DISEASE));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_INVESTIGATION", XML_DATA_INVESTIGATION));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PATIENT_COMPLAINT", XML_DATA_PATIENT_COMPLAINT));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_FAMILY_HISTORY", XML_DATA_FAMILY_HISTORY));
+
+            cmd.Parameters.Add(new SqlParameter("@PAYMODE", PAYMODE));
+            cmd.Parameters.Add(new SqlParameter("@BALANCE_AMOUNT", BALANCE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_PER", OTHER_CHARGES_PER));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_AMOUNT", OTHER_CHARGES_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_PERCENT", INV_DISCOUNT_PERCENT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_AMOUNT", INV_DISCOUNT_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@AMOUNT", AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@DISCOUNT", DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAXABLE_AMOUNT", TAXABLE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAX_AMOUNT", TAX_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@CASH_DISCOUNT", CASH_DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@NET_AMOUNT", NET_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_CODE", WARD_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_NAME", WARD_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_NAME", BED_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_CODE", BED_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@SOURCE", SOURCE));
+            cmd.Parameters.Add(new SqlParameter("@PAYER_CODE", PAYER_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PAYER_NAME", PAYER_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_NAME", EMERGENCY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_CONTACT", EMERGENCY_CONTACT));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_ADDRESS", EMERGENCY_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NAME", WARD_NAME));
+
+            cmd.Parameters.Add(new SqlParameter("@SURGEON_CODE", SURGEON_CODE));
+            cmd.Parameters.Add(new SqlParameter("@SURGEON_NAME", SURGEON_NAME));
+            cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_CODE", ANESTHETIST_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_NAME", ANESTHETIST_NAME));
+
+            cmd.Parameters.Add(new SqlParameter("@DEPENDENT_NAME", DEPENDENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_CODE", RELATION_WITH_DEPENDENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_NAME", RELATION_WITH_DEPENDENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@RANK", RANK));
+            cmd.Parameters.Add(new SqlParameter("@PID_NO", PID_NO));
+            cmd.Parameters.Add(new SqlParameter("@P_UNIT", P_UNIT));
+            cmd.Parameters.Add(new SqlParameter("@R_ADDRESS", R_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PROCEDURE", XML_DATA_PROCEDURE));
+
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITE_TIME", DEPOSITE_TIME));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITOR_NAME", DEPOSITOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BANK_NAME", BANK_NAME));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_NO", TRANSITION_NO));
+
+
+            conn.Open();
+            try
+            {
+                strResultstring = Convert.ToString(cmd.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public string UpdateList(string ADMISSION_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT,
+             string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE,
+             string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS)
+        {
+            string strResultstring = string.Empty;
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_GET_SAVE_IPD_ADMISSION]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+
+            if (!string.IsNullOrEmpty(DATE))
+            {
+                DateTime dt = DateTime.ParseExact(DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DATE", dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(VALIDITY))
+            {
+                DateTime _validity = DateTime.ParseExact(VALIDITY, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@VALIDITY", _validity));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@VALIDITY", ""));
+            }
+            if (!string.IsNullOrEmpty(MLC_DATETIME))
+            {
+                DateTime _mlc_DateTime = DateTime.ParseExact(MLC_DATETIME, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@MLC_DATETIME", _mlc_DateTime));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@MLC_DATETIME", ""));
+            }
+
+            if (!string.IsNullOrEmpty(LAST_MANTURAL_DATE))
+            {
+                DateTime last_del_dt = DateTime.ParseExact(LAST_MANTURAL_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@LAST_MANTURAL_DATE", last_del_dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@LAST_MANTURAL_DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(EST_DELIVARY_DATE))
+            {
+                DateTime est_dt = DateTime.ParseExact(EST_DELIVARY_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@EST_DELIVARY_DATE", est_dt));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@EST_DELIVARY_DATE", ""));
+            }
+            if (!string.IsNullOrEmpty(DOB))
+            {
+                DateTime _dob = DateTime.ParseExact(DOB, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DOB", _dob));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DOB", ""));
+            }
+
+            if (!string.IsNullOrEmpty(DEPOSITE_DATE))
+            {
+                DateTime _deposite_date = DateTime.ParseExact(DEPOSITE_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                cmd.Parameters.Add(new SqlParameter("@DEPOSITE_DATE", _deposite_date));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@DEPOSITE_DATE", ""));
+            }
+
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "UPDATE"));
+            cmd.Parameters.Add(new SqlParameter("@SPECIAL_INSTRUCTION", SPECIAL_INSTRUCTION));
+            cmd.Parameters.Add(new SqlParameter("@OPERATION", OPERATION));
+            cmd.Parameters.Add(new SqlParameter("@DIAGNOSIS", DIAGNOSIS));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_ID", HttpContext.Current.Session["USER_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_NAME", HttpContext.Current.Session["USER_NAME"]));
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", ADMISSION_NO));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_NAME", DEPARTMENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OPD_CARD_NO", OPD_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@CASUALTY_NO", CASUALTY_NO));
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_CODE", DOCTOR_CODE));
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_NAME", DOCTOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_CODE", REFERRED_BY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_NAME", REFERRED_BY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OLD_NO", OLD_NO));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@BED_NO", BED_NO));
+            cmd.Parameters.Add(new SqlParameter("@GATE_PASS_NO", GATE_PASS_NO));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_NO_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_NAME", ROOM_NO_NAME));
+            cmd.Parameters.Add(new SqlParameter("@MLC_NO", MLC_NO));
+            cmd.Parameters.Add(new SqlParameter("@MLC_URL", MLC_URL));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@NAME", NAME));
+            cmd.Parameters.Add(new SqlParameter("@GENDER", GENDER));
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@ALTERNATE_MOBILE", ALTERNATE_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@AGE_YY", AGE_YY));
+            cmd.Parameters.Add(new SqlParameter("@AGE_MM", AGE_MM));
+            cmd.Parameters.Add(new SqlParameter("@AGE_DD", AGE_DD));
+            cmd.Parameters.Add(new SqlParameter("@IS_LITERATE", IS_LITERATE));
+            cmd.Parameters.Add(new SqlParameter("@LANGUAGE_OF_CHOICE", LANGUAGE_OF_CHOICE));
+            cmd.Parameters.Add(new SqlParameter("@AADHAAR_NO", AADHAAR_NO));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_CODE", RELIGION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_NAME", RELIGION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@MARITAL_STATUS", MARITAL_STATUS));
+            cmd.Parameters.Add(new SqlParameter("@EMAIL", EMAIL));
+            cmd.Parameters.Add(new SqlParameter("@GUARDIAN", GUARDIAN));
+            cmd.Parameters.Add(new SqlParameter("@FAMILY_INCOME", FAMILY_INCOME));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_CODE", PATIENT_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_NAME", PATIENT_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@COMPANY_NAME", COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMPLOYEE_ID", EMPLOYEE_ID));
+            cmd.Parameters.Add(new SqlParameter("@INSURANCE_COMPANY_NAME", INSURANCE_COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_NUMBER", POLICY_NUMBER));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_AMOUNT", POLICY_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_CODE", OCCUPATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_NAME", OCCUPATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@DIET", DIET));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CONDITION", PATIENT_CONDITION));
+            cmd.Parameters.Add(new SqlParameter("@HEIGHT", HEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@WEIGHT", WEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@BLOOD_GROUP", BLOOD_GROUP));
+            cmd.Parameters.Add(new SqlParameter("@APGAR", APGAR));
+            cmd.Parameters.Add(new SqlParameter("@GROWTH", GROWTH));
+            cmd.Parameters.Add(new SqlParameter("@WAIST", WAIST));
+            cmd.Parameters.Add(new SqlParameter("@OBESITY", OBESITY));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_CODE", LOCALITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_NAME", LOCALITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@ADDRESS", ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@HOUSE_NO", HOUSE_NO));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NAME", STREET_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NO", STREET_NO));
+            cmd.Parameters.Add(new SqlParameter("@LANDMARK", LANDMARK));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_CODE", COUNTRY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_NAME", COUNTRY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STATE_CODE", STATE_CODE));
+            cmd.Parameters.Add(new SqlParameter("@STATE_NAME", STATE_NAME));
+            cmd.Parameters.Add(new SqlParameter("@CITY_CODE", CITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@CITY_NAME", CITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@PIN", PIN));
+            cmd.Parameters.Add(new SqlParameter("@KIN_NAME", KIN_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_CODE", KIN_RELATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_NAME", KIN_RELATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_CONTACT_NO", KIN_CONTACT_NO));
+            cmd.Parameters.Add(new SqlParameter("@PHONE", PHONE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_ADDRESS", KIN_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@PREGNANCY", PREGNANCY));
+            cmd.Parameters.Add(new SqlParameter("@PRENATAL_CHECKUP", PRENATAL_CHECKUP));
+            cmd.Parameters.Add(new SqlParameter("@FULLTERM", FULLTERM));
+            cmd.Parameters.Add(new SqlParameter("@NOTE", NOTE));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_TYPE", TRANSITION_TYPE));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA", XML_REQUEST));
+            cmd.Parameters.Add(new SqlParameter("@XML_CONSULTATION_DATA", XML_CONSULTATION));
+            cmd.Parameters.Add(new SqlParameter("@PAYMODE", PAYMODE));
+            cmd.Parameters.Add(new SqlParameter("@PAID_AMOUNT", PAID_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@BALANCE_AMOUNT", BALANCE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_PER", OTHER_CHARGES_PER));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_AMOUNT", OTHER_CHARGES_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_PERCENT", INV_DISCOUNT_PERCENT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_AMOUNT", INV_DISCOUNT_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@AMOUNT", AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@DISCOUNT", DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAXABLE_AMOUNT", TAXABLE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAX_AMOUNT", TAX_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@CASH_DISCOUNT", CASH_DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@NET_AMOUNT", NET_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_ALLERGY", XML_DATA_ALLERGY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PAST_HISTORY", XML_DATA_PAST_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PERSONAL_HISTORY", XML_DATA_PERSONAL_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_DISEASE", XML_DATA_DISEASE));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_INVESTIGATION", XML_DATA_INVESTIGATION));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PATIENT_COMPLAINT", XML_DATA_PATIENT_COMPLAINT));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_FAMILY_HISTORY", XML_DATA_FAMILY_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_CODE", WARD_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_NAME", WARD_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_NAME", BED_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_CODE", BED_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@SOURCE", SOURCE));
+            cmd.Parameters.Add(new SqlParameter("@PAYER_CODE", PAYER_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PAYER_NAME", PAYER_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_NAME", EMERGENCY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_CONTACT", EMERGENCY_CONTACT));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_ADDRESS", EMERGENCY_ADDRESS));
+
+            cmd.Parameters.Add(new SqlParameter("@SURGEON_CODE", SURGEON_CODE));
+            cmd.Parameters.Add(new SqlParameter("@SURGEON_NAME", SURGEON_NAME));
+            cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_CODE", ANESTHETIST_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_NAME", ANESTHETIST_NAME));
+
+            cmd.Parameters.Add(new SqlParameter("@DEPENDENT_NAME", DEPENDENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_CODE", RELATION_WITH_DEPENDENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_NAME", RELATION_WITH_DEPENDENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@RANK", RANK));
+            cmd.Parameters.Add(new SqlParameter("@PID_NO", PID_NO));
+            cmd.Parameters.Add(new SqlParameter("@P_UNIT", P_UNIT));
+            cmd.Parameters.Add(new SqlParameter("@R_ADDRESS", R_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PROCEDURE", XML_DATA_PROCEDURE));
+
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITE_TIME", DEPOSITE_TIME));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITOR_NAME", DEPOSITOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BANK_NAME", BANK_NAME));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_NO", TRANSITION_NO));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                strResultstring = Convert.ToString(cmd.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet SearchDRDeptWiseList(string DEPT_CODE, string SPECIALITY)
+        {
+            DataSet strResultString = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_OPD_REGISTRATION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "BINDDOCDEPTWISE"));
+            cmd.Parameters.Add(new SqlParameter("@DEPT_CODE", DEPT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@SPECIALITY_IN", SPECIALITY));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultString);
+            }
+            catch (Exception e)
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultString;
+        }
+
+        public DataSet ModuleDefaultServiceRecord(string PATIENT_CATEGORY)
+        {
+            DataSet strResultString = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "BINDDEFAULTSERVICE"));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY", PATIENT_CATEGORY));
+            conn.Open();
+            try
+            {
+
+                SqlDataAdapter dr = new SqlDataAdapter(cmd);
+                dr.Fill(strResultString);
+
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultString;
+        }
+
+        public DataSet GetAlreadyServiceMaster()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SERVICE_MASTER_LIST", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH SERVICE TYPE"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetAlreadyCategoryMaster(string SERVICE_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SERVICE_MASTER_LIST", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH SERVICE CATEGORY"));
+            cmd.Parameters.Add(new SqlParameter("@SERVICE_TYPE_CODE", SERVICE_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+
+
+        }
+
+        public DataSet GetSearchPatientDetailInfoList(string SERVICE_TYPE, string SERVICE_CATEGORY, string PATIENT_CATEGORY, string SERVICE_NAME)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH SERVICE LIST"));
+            cmd.Parameters.Add(new SqlParameter("@SERVICE_TYPE_NAME", SERVICE_TYPE));
+            cmd.Parameters.Add(new SqlParameter("@CATEGORY_TYPE_NAME", SERVICE_CATEGORY));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY", @PATIENT_CATEGORY));
+            cmd.Parameters.Add(new SqlParameter("@SERVICE_NAME", SERVICE_NAME));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetWardCategoryList()
+        {
+
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_WARDCATEGORY"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+
+
+        public DataSet GetBedCategoryList()
+        {
+
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_BEDCATEGORY"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+        public DataSet GetBedNoDetail(string WARD_CATEGORY_CODE)
+        {
+            DataSet ds = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_BED_NO"));
+
+
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_CODE", WARD_CATEGORY_CODE));
+
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return ds;
+
+        }
+        public DataSet PayerDetailsList()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_PAYERDETAILS"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+
+        }
+        public DataSet BIND_ROOMNOLIST(string WARD_CODE)
+        {
+
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "BIND_ROOMNO"));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+        public DataSet BIND_BEDNOLIST(string ROOM_CODE, string WARD_CODE)
+        {
+
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "BIND_BED_NO"));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_CODE));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+        
+
+       
+      
+
+
+
+        
+
+       
+        //********* BIND DOCTOR START HERE Bablu********
+        public DataSet BindDoctorDL(string DEPT_CODE)
+        {
+            DataSet ds = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_DOCTOR"));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPT_CODE));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return ds;
+
+        }
+        public DataSet BindReferredDoctorDL()
+        {
+            DataSet ds = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_DOCTOR_REFERRED"));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return ds;
+
+        }
+
+
+        public string SaveRecordIPDDL(string ADMISSION_NO, string UHID, string NAME, string ADDRESS1, string ADDRESS2, string TIME, string SOURCE, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string DOCTOR_CODE, string DOCTOR_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string WARD_NO, string WARD_NO_NAME, string ROOM_NO_CODE, string ROOM_NO_NAME, string BED_CATEGORY_CODE, string BED_CATEGORY_NAME, string BED_NO, string BED_NO_NAME, string OLD_NO, string GATE_PASS_NO, string MOBILE, string ALTERNATE_MOBILE, string GENDER, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string AADHAAR_NO, string MARITAL_STATUS, string RELIGION_CODE, string RELIGION_NAME, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string LANGUAGE_OF_CHOICE, string PATIENT_CONDITION, string PATIENT_CATEGORY_CODE, string PATIENT_CATEGORY_NAME, string COMPANY_NAME, string EMPLOYEE_ID, string PAYER_CODE, string PAYER_NAME, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string PANEL_CODE, string PANEL_NAME, string AD_MOBILE, string AD_ALT_MOBILE, string AD_EMAIL, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, string PREGNANCY, string PRENATAL_CHECKUP, string FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string EMERGENCY_NAME, string EMERGENCY_ADDRESS, string EMERGENCY_CONTACT, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS, string XML_DATA_PATIENT_COMPLAINT, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_FAMILY_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_PROCEDURE, string PAYMODE, string DEPOSITE_AMOUNT, string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string POLICY_LIMIT, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string LOCALITY_CODE, string LOCALITY_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string XML_REQUEST, string MLC_NO, string MLC_DATETIME, string MLC_URL, string XML_CONSULTATION, string AUSHMAN_CARD_NO, string BPL_CARD_NO, string ROOM_CATEGORY_CODE, string ROOM_CATEGORY_NAME, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string DISCOUNT_FROM, string IS_LITERATE, string MARITAL_STATUS_CODE, string CAREGIVER_CODE, string CAREGIVER_NAME, string CAREGIVER_RELATION, string CAREGIVER_MOBILE, string CAREGIVER_EMAIL, string CAREGIVER_ADDRESS, string KEY_FINDING, string PHYSICAL_EXAMINATION)
+        {
+            string strResultstring = string.Empty;
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            string admissionNo;
+            admissionNo = ADMISSION_NO;
+            if (admissionNo == "")
+            {
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SAVE_IPD"));
+            }
+            else
+            {
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "UPDATE"));
+            }
+            cmd.Parameters.Add(new SqlParameter("@ADMISSION_NO", ADMISSION_NO));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@NAME", NAME));
+            cmd.Parameters.Add(new SqlParameter("@ADDRESS1", ADDRESS1));
+            cmd.Parameters.Add(new SqlParameter("@ADDRESS2", ADDRESS2));
+            cmd.Parameters.Add(new SqlParameter("@TIME", TIME));
+
+            cmd.Parameters.Add(new SqlParameter("@SOURCE", SOURCE));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_NAME", DEPARTMENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_CODE", DOCTOR_CODE));
+            cmd.Parameters.Add(new SqlParameter("@DOCTOR_NAME", DOCTOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OPD_CARD_NO", OPD_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@CASUALTY_NO", CASUALTY_NO));
+            cmd.Parameters.Add(new SqlParameter("@DATE", DATE));
+
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_CODE", REFERRED_BY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@REFERRED_BY_NAME", REFERRED_BY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@VALIDITY", VALIDITY));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_CODE", WARD_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@WARD_CATEGORY_NAME", WARD_CATEGORY_NAME));
+
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO_NAME", WARD_NO_NAME));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_NO_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_NAME", ROOM_NO_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_CODE", BED_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@BED_CATEGORY_NAME", BED_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BED_NO", BED_NO));
+            cmd.Parameters.Add(new SqlParameter("@BED_NO_NAME", BED_NO_NAME));
+            cmd.Parameters.Add(new SqlParameter("@OLD_NO", OLD_NO));
+            cmd.Parameters.Add(new SqlParameter("@GATE_PASS_NO", GATE_PASS_NO));
+
+
+            cmd.Parameters.Add(new SqlParameter("@MOBILE", MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@ALTERNATE_MOBILE", ALTERNATE_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@GENDER", GENDER));
+            cmd.Parameters.Add(new SqlParameter("@DOB", DOB));
+            cmd.Parameters.Add(new SqlParameter("@AGE_YY", AGE_YY));
+            cmd.Parameters.Add(new SqlParameter("@AGE_MM", AGE_MM));            
+            cmd.Parameters.Add(new SqlParameter("@AGE_DD", AGE_DD));
+            cmd.Parameters.Add(new SqlParameter("@AADHAAR_NO", AADHAAR_NO));
+            
+            cmd.Parameters.Add(new SqlParameter("@MARITAL_STATUS", MARITAL_STATUS));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_CODE", RELIGION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@RELIGION_NAME", RELIGION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMAIL", EMAIL));
+
+            cmd.Parameters.Add(new SqlParameter("@GUARDIAN", GUARDIAN));
+            cmd.Parameters.Add(new SqlParameter("@FAMILY_INCOME", FAMILY_INCOME));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_CODE", OCCUPATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@OCCUPATION_NAME", OCCUPATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@DIET", DIET));
+            cmd.Parameters.Add(new SqlParameter("@LANGUAGE_OF_CHOICE", LANGUAGE_OF_CHOICE));
+
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CONDITION", PATIENT_CONDITION));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_CODE", PATIENT_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_CATEGORY_NAME", PATIENT_CATEGORY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@COMPANY_NAME", COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMPLOYEE_ID", EMPLOYEE_ID));
+
+            cmd.Parameters.Add(new SqlParameter("@PAYER_CODE", PAYER_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PAYER_NAME", PAYER_NAME));
+            cmd.Parameters.Add(new SqlParameter("@HEIGHT", HEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@WEIGHT", WEIGHT));
+            cmd.Parameters.Add(new SqlParameter("@BLOOD_GROUP", BLOOD_GROUP));
+            cmd.Parameters.Add(new SqlParameter("@APGAR", APGAR));
+            cmd.Parameters.Add(new SqlParameter("@GROWTH", GROWTH));
+
+            cmd.Parameters.Add(new SqlParameter("@WAIST", WAIST));
+            cmd.Parameters.Add(new SqlParameter("@OBESITY", OBESITY));
+            cmd.Parameters.Add(new SqlParameter("@PANEL_CODE", PANEL_CODE));
+            cmd.Parameters.Add(new SqlParameter("@PANEL_NAME", PANEL_NAME));
+
+
+            cmd.Parameters.Add(new SqlParameter("@AD_MOBILE", AD_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@AD_ALT_MOBILE", AD_ALT_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@AD_EMAIL", AD_EMAIL));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_CODE", COUNTRY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@COUNTRY_NAME", COUNTRY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STATE_CODE", STATE_CODE));
+            cmd.Parameters.Add(new SqlParameter("@STATE_NAME", STATE_NAME));
+            cmd.Parameters.Add(new SqlParameter("@CITY_CODE", CITY_CODE));
+
+            cmd.Parameters.Add(new SqlParameter("@CITY_NAME", CITY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@PIN", PIN));
+            cmd.Parameters.Add(new SqlParameter("@KIN_NAME", KIN_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_CODE", KIN_RELATION_CODE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_RELATION_NAME", KIN_RELATION_NAME));
+            cmd.Parameters.Add(new SqlParameter("@KIN_CONTACT_NO", KIN_CONTACT_NO));
+            cmd.Parameters.Add(new SqlParameter("@PHONE", PHONE));
+            cmd.Parameters.Add(new SqlParameter("@KIN_ADDRESS", KIN_ADDRESS));
+
+            //******NEW
+            cmd.Parameters.Add(new SqlParameter("@PREGNANCY", PREGNANCY));
+            cmd.Parameters.Add(new SqlParameter("@PRENATAL_CHECKUP", PRENATAL_CHECKUP));
+            cmd.Parameters.Add(new SqlParameter("@FULLTERM", FULLTERM));
+            cmd.Parameters.Add(new SqlParameter("@LAST_MANTURAL_DATE", LAST_MANTURAL_DATE));
+            cmd.Parameters.Add(new SqlParameter("@EST_DELIVARY_DATE", EST_DELIVARY_DATE));
+
+            cmd.Parameters.Add(new SqlParameter("@NOTE", NOTE));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_TYPE", TRANSITION_TYPE));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_NAME", EMERGENCY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_ADDRESS", EMERGENCY_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@EMERGENCY_CONTACT", EMERGENCY_CONTACT));
+
+            cmd.Parameters.Add(new SqlParameter("@SPECIAL_INSTRUCTION", SPECIAL_INSTRUCTION));
+            cmd.Parameters.Add(new SqlParameter("@OPERATION", OPERATION));
+            cmd.Parameters.Add(new SqlParameter("@DIAGNOSIS", DIAGNOSIS));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PATIENT_COMPLAINT", XML_DATA_PATIENT_COMPLAINT));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_ALLERGY", XML_DATA_ALLERGY));
+
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PAST_HISTORY", XML_DATA_PAST_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PERSONAL_HISTORY", XML_DATA_PERSONAL_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_FAMILY_HISTORY", XML_DATA_FAMILY_HISTORY));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_DISEASE", XML_DATA_DISEASE));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_INVESTIGATION", XML_DATA_INVESTIGATION));
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA_PROCEDURE", XML_DATA_PROCEDURE));
+
+            cmd.Parameters.Add(new SqlParameter("@PAYMODE", PAYMODE));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITE_AMOUNT", DEPOSITE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITE_DATE", DEPOSITE_DATE));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITE_TIME", DEPOSITE_TIME));
+            cmd.Parameters.Add(new SqlParameter("@DEPOSITOR_NAME", DEPOSITOR_NAME));
+            cmd.Parameters.Add(new SqlParameter("@BANK_NAME", BANK_NAME));
+            cmd.Parameters.Add(new SqlParameter("@TRANSITION_NO", TRANSITION_NO));
+
+            //********* HIDDEN FIELDS ****            
+            cmd.Parameters.Add(new SqlParameter("@INSURANCE_COMPANY_NAME", INSURANCE_COMPANY_NAME));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_NUMBER", POLICY_NUMBER));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_AMOUNT", POLICY_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@POLICY_LIMIT", POLICY_LIMIT));
+            cmd.Parameters.Add(new SqlParameter("@HOUSE_NO", HOUSE_NO));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NAME", STREET_NAME));
+            cmd.Parameters.Add(new SqlParameter("@STREET_NO", STREET_NO));
+            cmd.Parameters.Add(new SqlParameter("@LANDMARK", LANDMARK));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_CODE", LOCALITY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@LOCALITY_NAME", LOCALITY_NAME));
+
+            //*****J&K HQ FIELDS *********
+            //cmd.Parameters.Add(new SqlParameter("@DEPENDENT_NAME", DEPENDENT_NAME));
+            //cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_CODE", RELATION_WITH_DEPENDENT_CODE));
+            //cmd.Parameters.Add(new SqlParameter("@RELATION_WITH_DEPENDENT_NAME", RELATION_WITH_DEPENDENT_NAME));
+            //cmd.Parameters.Add(new SqlParameter("@RANK", RANK));
+            //cmd.Parameters.Add(new SqlParameter("@PID_NO", PID_NO));
+            //cmd.Parameters.Add(new SqlParameter("@P_UNIT", P_UNIT));
+            //cmd.Parameters.Add(new SqlParameter("@R_ADDRESS", R_ADDRESS));
+
+            //cmd.Parameters.Add(new SqlParameter("@SURGEON_CODE", SURGEON_CODE));
+            //cmd.Parameters.Add(new SqlParameter("@SURGEON_NAME", SURGEON_NAME));
+            //cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_CODE", ANESTHETIST_CODE));
+            //cmd.Parameters.Add(new SqlParameter("@ANESTHETIST_NAME", ANESTHETIST_NAME));
+
+            cmd.Parameters.Add(new SqlParameter("@XML_DATA", XML_REQUEST));
+
+            cmd.Parameters.Add(new SqlParameter("@MLC_NO", MLC_NO));
+            cmd.Parameters.Add(new SqlParameter("@MLC_DATETIME", MLC_DATETIME));
+            cmd.Parameters.Add(new SqlParameter("@MLC_URL", MLC_URL));
+            cmd.Parameters.Add(new SqlParameter("@XML_CONSULTATION_DATA", XML_CONSULTATION));
+            cmd.Parameters.Add(new SqlParameter("@AUSHMAN_CARD_NO", AUSHMAN_CARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@BPL_CARD_NO", BPL_CARD_NO));
+
+            cmd.Parameters.Add(new SqlParameter("@ROOM_CATEGORY_CODE", ROOM_CATEGORY_CODE));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_CATEGORY_NAME", ROOM_CATEGORY_NAME));
+            //Fina start here 
+            cmd.Parameters.Add(new SqlParameter("@BALANCE_AMOUNT", BALANCE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_PER", OTHER_CHARGES_PER));
+            cmd.Parameters.Add(new SqlParameter("@OTHER_CHARGES_AMOUNT", OTHER_CHARGES_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_PERCENT", INV_DISCOUNT_PERCENT));
+            cmd.Parameters.Add(new SqlParameter("@INV_DISCOUNT_AMOUNT", INV_DISCOUNT_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@AMOUNT", AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@DISCOUNT", DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAXABLE_AMOUNT", TAXABLE_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@TAX_AMOUNT", TAX_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@CASH_DISCOUNT", CASH_DISCOUNT));
+            cmd.Parameters.Add(new SqlParameter("@NET_AMOUNT", NET_AMOUNT));
+            cmd.Parameters.Add(new SqlParameter("@DISCOUNT_FROM", DISCOUNT_FROM));
+            cmd.Parameters.Add(new SqlParameter("@IS_LITERATE", IS_LITERATE));
+            cmd.Parameters.Add(new SqlParameter("@MARITAL_STATUS_CODE", MARITAL_STATUS_CODE));
+
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_CODE", CAREGIVER_CODE));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_NAME", CAREGIVER_NAME));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_RELATION", CAREGIVER_RELATION));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_MOBILE", CAREGIVER_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_EMAIL", CAREGIVER_EMAIL));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_ADDRESS", CAREGIVER_ADDRESS));
+            cmd.Parameters.Add(new SqlParameter("@KEY_FINDING", KEY_FINDING));
+            cmd.Parameters.Add(new SqlParameter("@PHYSICAL_EXAMINATION", PHYSICAL_EXAMINATION));
+
+            cmd.Parameters.Add(new SqlParameter("@F20TYPE", Convert.ToString(F20Constants.F20Variable.IPD_ADMISSION)));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_ID", HttpContext.Current.Session["USER_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@USER_NAME", HttpContext.Current.Session["USER_NAME"]));
+
+
+            conn.Open();
+            try
+            {
+                strResultstring = Convert.ToString(cmd.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        //************ Bind BEd No Start here ********
+
+        public DataSet GetWardNoDL(string DEPARTMENT_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_WARD_NO"));
+            cmd.Parameters.Add(new SqlParameter("@DEPARTMENT_CODE", DEPARTMENT_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+        public DataSet GetRoomNoDL(string WARD_NO)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_ROOM_NO"));
+            cmd.Parameters.Add(new SqlParameter("@WARD_NO", WARD_NO));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+        public DataSet GetBedCategoryIPDDL()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_BED_CATEGORY"));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetBedNoIPDDL(string ROOM_NO_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_BEDNO"));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_NO_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+        public DataSet GetRoomCategoryDL()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_ROOM_CATEGORY"));
+
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+        public DataSet GetOccupiedBedDL(string ROOM_NO_CODE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_WEB_SAVE_IPD_ADMISSION", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_OCCUPIED_BEDNO"));
+            cmd.Parameters.Add(new SqlParameter("@ROOM_NO_CODE", ROOM_NO_CODE));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+
+        public DataSet SearchCaregiverListDL(string CODE, string CAREGIVER_NAME, string CAREGIVER_MOBILE, string UHID, string PATIENT_NAME, string PATIENT_MOBILE)
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("[UDSP_SEARCH_CAREGIVER_PATIENT]", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_CAREGIVER_LIST"));
+            //cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            //cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CODE", CODE));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_NAME", CAREGIVER_NAME));
+            cmd.Parameters.Add(new SqlParameter("@CAREGIVER_MOBILE", CAREGIVER_MOBILE));
+            cmd.Parameters.Add(new SqlParameter("@UHID", UHID));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_NAME", PATIENT_NAME));
+            cmd.Parameters.Add(new SqlParameter("@PATIENT_MOBILE", PATIENT_MOBILE));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+        public DataSet GetRelationList()
+        {
+            DataSet strResultstring = new DataSet();
+            conn = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString()));
+            cmd = new SqlCommand("UDSP_GET_RELATION_LIST", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET"));
+            cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+            cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+            conn.Open();
+            try
+            {
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(strResultstring);
+            }
+            catch (Exception)
+            {
+
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return strResultstring;
+        }
+
+
+
+        //public DataSet GetAllRecord(string SEARCH_UHID, string SEARCH_NAME, string SEARCH_MOBILE, string SEARCH_OPD, string SEARCH_IPD, string SEARCH_AADHAAR, string SEARCH_CASUALTY)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public DataSet IpdShortStaySearchList(string UHID, string PID_NO, string SHORT_STAY_NO, string NAME, string MOBILE, string FROM_DATE, string TO_DATE)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataSet IpdShortStayEditRecordList(string SHORT_STAY_NO)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string IpdShortStaySaveList(string SHORT_STAY_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string AUSHMAN_CARD_NO, string BPL_CARD_NO, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT, string WARD_NAME, string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE, string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS, string HISTORY_PRESENT_ILLNESS, string TREATMENT, string PATIENT_RECORD)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string IpdShortStayUpdateList(string SHORT_STAY_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT, string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE, string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS, string HISTORY_PRESENT_ILLNESS, string TREATMENT, string PATIENT_RECORD)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataSet GetSearchPatientDetailInfoList(string SERVICE_TYPE, string SERVICE_CATEGORY, string PATIENT_CATEGORY)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string EXISTING_PATIENT_STATUS_SS_DLL(string UHID)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
+
+}

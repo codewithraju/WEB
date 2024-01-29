@@ -1,0 +1,609 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using System.Web.Services;
+using HMS.BuisinessFramework;
+using System.Globalization;
+//using iTextSharp.text;
+//using iTextSharp.text.pdf;
+using System.Configuration;
+using System.Data.SqlClient;
+
+public partial class IPD_IpdShortStay : System.Web.UI.Page
+{
+    static string ecrconstr = ConfigurationManager.ConnectionStrings["MoonrakerConnectionString1"].ToString();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        string F20Type = Convert.ToString(HMS.BuisinessFramework.F20Constants.F20Variable.IPD_SHORT_STAY);
+        hdnf20Type.Value = F20Type; 
+        if (!IsPostBack)
+        {
+            Common objCommon = new Common();
+            hdnFormPrivellege.Value = objCommon.GetFormPrevillege("IPD Admission").ToString();
+        }
+    }
+    [WebMethod]//GetAutoCompleteForPastHistory
+    public static List<string> GetAutoCompleteForFamilyHistory(string HISTORY_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("UDSP_GET_PRESCRIPTION_AUTOCOMPLETE", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_DISEASE"));
+                // cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@SEARCH_TEXT", HISTORY_NAME));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}|{2}", dr["NAME"], dr["CODE"], dr["TYPE"]));
+                }
+                return result;
+            }
+        }
+    }
+    [WebMethod]
+    public static List<string> GetAutoCompleteForComplaint(string COMPLAINT_NAME)
+    {
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT CODE,NAME FROM COMPLAINT_MASTER WHERE ISNULL(STATUS,'D')='A' AND HOSPITAL_ID=@HOSPITAL_ID AND CLINIC_ID=@CLINIC_ID AND ISNULL(NAME,'') LIKE '" + COMPLAINT_NAME + "%'", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                //cmd.Parameters.Add(new SqlParameter("@SearchText", username));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}", dr["NAME"], dr["CODE"]));
+                }
+                return result;
+            }
+        }
+    }
+    //----------------------BIND DROPDOWNS---------------------------------------//
+    [WebMethod]//GetAutoCompleteForPastHistory
+    public static List<string> GetAutoCompleteForPastHistory(string HISTORY_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("UDSP_GET_PRESCRIPTION_AUTOCOMPLETE", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_DISEASE"));
+                // cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@SEARCH_TEXT", HISTORY_NAME));
+
+                SqlDataReader dr;
+                // dr.Close();                
+                dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    try
+                    {
+                        result.Add(string.Format("{0}|{1}|{2}", dr["NAME"], dr["CODE"], dr["TYPE"]));
+                    }
+                    catch (Exception ex) { }
+                }
+                return result;
+            }
+        }
+    }//GetAutoCompleteForInvestigation GetAutoCompleteForAdvisedInvestigation
+    [WebMethod]
+    public static List<string> GetAutoCompleteForDisease(string DISEASE_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT DISEASE_CODE AS CODE ,DISEASE_NAME AS NAME FROM DISEASE WHERE ISNULL(STATUS,'D')='A' AND HOSPITAL_ID=@HOSPITAL_ID AND CLINIC_ID=@CLINIC_ID AND ISNULL(DISEASE_NAME,'') LIKE '" + DISEASE_NAME + "%'", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                //cmd.Parameters.Add(new SqlParameter("@SearchText", username));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}", dr["NAME"], dr["CODE"]));
+                }
+                return result;
+            }
+        }
+    }//GetAutoCompleteForAllergy
+    [WebMethod]
+    public static List<string> GetAutoCompleteForAdvisedInvestigation(string INVESTIGATION_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM INVESTIGATION WHERE HOSPITAL_ID=@HOSPITAL_ID AND CLINIC_ID=@CLINIC_ID AND ISNULL(NAME,'') LIKE '" + INVESTIGATION_NAME + "%'", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                //cmd.Parameters.Add(new SqlParameter("@SearchText", username));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}", dr["NAME"], dr["CODE"]));
+                }
+                return result;
+            }
+        }
+    }
+
+    [WebMethod]
+    public static List<string> GetAutoCompleteForProcedure(string PROCEDURE_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("SELECT * FROM PROCEDURE_MASTER WHERE HOSPITAL_ID=@HOSPITAL_ID AND CLINIC_ID=@CLINIC_ID AND ISNULL(PROCEDURE_NAME,'') LIKE '" + PROCEDURE_NAME + "%'", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.Text;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                //cmd.Parameters.Add(new SqlParameter("@SearchText", username));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}", dr["PROCEDURE_NAME"], dr["CODE"]));
+                }
+                return result;
+            }
+        }
+    }
+
+    [WebMethod]//GetAutoCompleteForPastHistory
+    public static List<string> GetAutoCompleteForPersonalHistory(string PERSONAL_HISTORY_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("UDSP_GET_PRESCRIPTION_AUTOCOMPLETE", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_HABIT"));
+                // cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@SEARCH_TEXT", PERSONAL_HISTORY_NAME));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}", dr["NAME"], dr["CODE"]));
+                }
+                return result;
+            }
+        }
+    }
+    [WebMethod]
+    public static List<string> GetAutoCompleteForAllergy(string ALERGY_NAME)
+    {
+        ApplicationFields objApplicationFields = new ApplicationFields();
+        List<string> result = new List<string>();
+        EncryptDecrypt objEncryptDecrypt = new EncryptDecrypt();
+        using (SqlConnection con = new SqlConnection(objEncryptDecrypt.Decrypt(ecrconstr.ToString())))
+        {
+            using (SqlCommand cmd = new SqlCommand("UDSP_GET_PRESCRIPTION_AUTOCOMPLETE", con))
+            {
+                con.Open();
+                cmd.CommandType = CommandType.StoredProcedure;
+                //cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "SEARCH_ITEM_NAME"));
+                cmd.Parameters.Add(new SqlParameter("@HOSPITAL_ID", HttpContext.Current.Session["HOSPITAL_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@INPUT_TYPE", "GET_ALLERGY"));
+                // cmd.Parameters.Add(new SqlParameter("@CLINIC_ID", HttpContext.Current.Session["CLINIC_ID"]));
+                cmd.Parameters.Add(new SqlParameter("@SEARCH_TEXT", ALERGY_NAME));
+
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    result.Add(string.Format("{0}|{1}|{2}", dr["NAME"], dr["CODE"], dr["TYPE"]));
+                }
+                return result;
+            }
+        }
+    }//GetAutoCompleteForAllergy
+
+    [WebMethod()]
+    public static string GetDepartmentList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetDepartment();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetPatientCategoryList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetPatientCategory();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetRoomNoList(string DEPARTMENT_CODE)
+    {
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        DataSet ds = obj.GetRoomNo(DEPARTMENT_CODE);
+        return ds.GetXml().ToString();
+
+    }
+
+
+
+    [WebMethod()]
+    public static string GetWardNoList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetWardNo();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetRelationList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetRelation();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetReligionList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetReligion();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetOccupationList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetOccupation();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetLocalityList()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetLocality();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetCountryList()
+    {
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        DataSet ds = obj.GetCountry();
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetStateList(string COUNTRY_CODE)
+    {
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        DataSet ds = obj.GetState(COUNTRY_CODE);
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetCityList(string STATE_CODE)
+    {
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        DataSet ds = obj.GetCity(STATE_CODE);
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetPincodeRecord(string CITY_CODE)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetPinCode(CITY_CODE);
+        return ds.GetXml().ToString();
+    }
+
+    //-----------------------------------------------------------------------------//
+
+    //GETTING DATA THROUGH UHID
+    [WebMethod()]
+    public static string SearchUHIDRecord(string UHID, string NAME, string MOBILE)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetUHID(UHID, NAME, MOBILE);
+        return ds.GetXml().ToString();
+    }
+
+    //GETTING DATA OF NEW RECORD
+    [WebMethod()]
+    public static string SearchNewUHIDRecord(string UHID)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetNewUHID(UHID);
+        return ds.GetXml().ToString();
+    }
+
+    //SEARCHING THROUGH 7 FIELDS
+
+    [WebMethod()]
+    public static string SearchAllRecord(string SEARCH_UHID, string SEARCH_NAME, string SEARCH_MOBILE, string SEARCH_OPD, string SEARCH_IPD, string SEARCH_AADHAAR, string SEARCH_CASUALTY)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetAllRecord(SEARCH_UHID, SEARCH_NAME, SEARCH_MOBILE, SEARCH_OPD, SEARCH_IPD, SEARCH_AADHAAR, SEARCH_CASUALTY);
+        return ds.GetXml().ToString();
+    }
+
+    //GETTING DATA THROUGH ADMISSION_NO
+    [WebMethod()]
+    public static string SearchAdmission(string UHID, string PID_NO, string SHORT_STAY_NO, string NAME, string MOBILE, string FROM_DATE, string TO_DATE)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.IpdShortStaySearchList(UHID, PID_NO, SHORT_STAY_NO, NAME, MOBILE, FROM_DATE, TO_DATE);
+        return ds.GetXml().ToString();
+    }
+
+    //GETTING DATA THROUGH ADMISSION_NO
+    [WebMethod()]
+    public static string GetEditRecord(string SHORT_STAY_NO)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.IpdShortStayEditRecordList(SHORT_STAY_NO);
+        return ds.GetXml().ToString();
+    }
+
+    //SAVING NEW RECORD
+    [WebMethod()]
+    public static string SaveNewPatientRecord(string FNAME, string GENDER, string AGE_YY, string ADHAR_NO, string MOBILE, string LOCALITY_CODE, string LOCALITY_NAME, string PATIENT_CATEGORY, string AUSHMAN_CARD_NO, string BPL_CARD_NO)
+    {
+        string resultstring = string.Empty;
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        resultstring = obj.SaveNewPatientRecordList(FNAME, GENDER, AGE_YY, ADHAR_NO, MOBILE, LOCALITY_CODE, LOCALITY_NAME, PATIENT_CATEGORY, AUSHMAN_CARD_NO, BPL_CARD_NO);
+        return resultstring.ToString();
+    }
+
+    [WebMethod()]
+    public static string SaveRecord(string SHORT_STAY_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string AUSHMAN_CARD_NO, string BPL_CARD_NO, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT, string WARD_NAME,
+         string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME,  string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE,
+         string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS, string HISTORY_PRESENT_ILLNESS, string TREATMENT, string PATIENT_RECORD)
+    {
+        string resultstring = string.Empty;
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        //DateTime dt = DateTime.ParseExact(DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //DateTime _validity = DateTime.ParseExact(VALIDITY, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //DateTime _dob = DateTime.ParseExact(DOB, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //DateTime est_dt = DateTime.ParseExact(EST_DELIVARY_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //DateTime last_del_dt = DateTime.ParseExact(LAST_MANTURAL_DATE, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        resultstring = obj.IpdShortStaySaveList(SHORT_STAY_NO, DEPARTMENT_CODE, DEPARTMENT_NAME, OPD_CARD_NO, CASUALTY_NO, DOCTOR_CODE, DOCTOR_NAME, DATE, REFERRED_BY_CODE, REFERRED_BY_NAME, VALIDITY, OLD_NO, WARD_NO, BED_NO, GATE_PASS_NO, ROOM_NO_CODE, ROOM_NO_NAME, MLC_NO, MLC_DATETIME, MLC_URL, UHID, NAME, GENDER, MOBILE, ALTERNATE_MOBILE, DOB, AGE_YY, AGE_MM, AGE_DD, IS_LITERATE, LANGUAGE_OF_CHOICE, AADHAAR_NO, RELIGION_CODE, RELIGION_NAME, MARITAL_STATUS, EMAIL, GUARDIAN, FAMILY_INCOME, PATIENT_CATEGORY_NAME, PATIENT_CATEGORY_CODE, AUSHMAN_CARD_NO, BPL_CARD_NO, COMPANY_NAME, EMPLOYEE_ID, INSURANCE_COMPANY_NAME, POLICY_NUMBER, POLICY_AMOUNT, OCCUPATION_CODE, OCCUPATION_NAME, DIET, PATIENT_CONDITION, HEIGHT, WEIGHT, BLOOD_GROUP, APGAR, GROWTH, WAIST, OBESITY, LOCALITY_CODE, LOCALITY_NAME, ADDRESS, HOUSE_NO, STREET_NAME, STREET_NO, LANDMARK, COUNTRY_CODE, COUNTRY_NAME, STATE_CODE, STATE_NAME, CITY_CODE, CITY_NAME, PIN, KIN_NAME, KIN_RELATION_CODE, KIN_RELATION_NAME, KIN_CONTACT_NO, PHONE, KIN_ADDRESS, PREGNANCY, PRENATAL_CHECKUP, FULLTERM, LAST_MANTURAL_DATE, EST_DELIVARY_DATE, NOTE, TRANSITION_TYPE, XML_REQUEST, XML_CONSULTATION, PAYMODE, PAID_AMOUNT, BALANCE_AMOUNT, OTHER_CHARGES_PER, OTHER_CHARGES_AMOUNT, INV_DISCOUNT_PERCENT, INV_DISCOUNT_AMOUNT, AMOUNT, DISCOUNT, TAXABLE_AMOUNT, TAX_AMOUNT, CASH_DISCOUNT, NET_AMOUNT, WARD_CATEGORY_CODE, WARD_CATEGORY_NAME, BED_CATEGORY_NAME, BED_CATEGORY_CODE, SOURCE, PAYER_CODE, PAYER_NAME, EMERGENCY_NAME, EMERGENCY_CONTACT, EMERGENCY_ADDRESS, XML_DATA_ALLERGY, XML_DATA_PAST_HISTORY, XML_DATA_PERSONAL_HISTORY, XML_DATA_DISEASE, XML_DATA_INVESTIGATION, XML_DATA_FAMILY_HISTORY, XML_DATA_PATIENT_COMPLAINT, WARD_NAME,
+              SURGEON_CODE, SURGEON_NAME, ANESTHETIST_CODE, ANESTHETIST_NAME,  DEPENDENT_NAME, RELATION_WITH_DEPENDENT_CODE, RELATION_WITH_DEPENDENT_NAME, RANK, PID_NO, P_UNIT, R_ADDRESS, XML_DATA_PROCEDURE,
+               DEPOSITE_DATE, DEPOSITE_TIME, DEPOSITOR_NAME, BANK_NAME, TRANSITION_NO, SPECIAL_INSTRUCTION, OPERATION, DIAGNOSIS, HISTORY_PRESENT_ILLNESS, TREATMENT, PATIENT_RECORD);
+
+        return resultstring.ToString();
+    }
+
+    [WebMethod()]
+    public static string UpdateRecord(string SHORT_STAY_NO, string DEPARTMENT_CODE, string DEPARTMENT_NAME, string OPD_CARD_NO, string CASUALTY_NO, string DOCTOR_CODE, string DOCTOR_NAME, string DATE, string REFERRED_BY_CODE, string REFERRED_BY_NAME, string VALIDITY, string OLD_NO, string WARD_NO, string BED_NO, string GATE_PASS_NO, string ROOM_NO_CODE, string ROOM_NO_NAME, string MLC_NO, string MLC_DATETIME, string MLC_URL, string UHID, string NAME, string GENDER, string MOBILE, string ALTERNATE_MOBILE, string DOB, string AGE_YY, string AGE_MM, string AGE_DD, string IS_LITERATE, string LANGUAGE_OF_CHOICE, string AADHAAR_NO, string RELIGION_CODE, string RELIGION_NAME, string MARITAL_STATUS, string EMAIL, string GUARDIAN, string FAMILY_INCOME, string PATIENT_CATEGORY_NAME, string PATIENT_CATEGORY_CODE, string COMPANY_NAME, string EMPLOYEE_ID, string INSURANCE_COMPANY_NAME, string POLICY_NUMBER, string POLICY_AMOUNT, string OCCUPATION_CODE, string OCCUPATION_NAME, string DIET, string PATIENT_CONDITION, string HEIGHT, string WEIGHT, string BLOOD_GROUP, string APGAR, string GROWTH, string WAIST, string OBESITY, string LOCALITY_CODE, string LOCALITY_NAME, string ADDRESS, string HOUSE_NO, string STREET_NAME, string STREET_NO, string LANDMARK, string COUNTRY_CODE, string COUNTRY_NAME, string STATE_CODE, string STATE_NAME, string CITY_CODE, string CITY_NAME, string PIN, string KIN_NAME, string KIN_RELATION_CODE, string KIN_RELATION_NAME, string KIN_CONTACT_NO, string PHONE, string KIN_ADDRESS, int PREGNANCY, int PRENATAL_CHECKUP, int FULLTERM, string LAST_MANTURAL_DATE, string EST_DELIVARY_DATE, string NOTE, string TRANSITION_TYPE, string XML_REQUEST, string XML_CONSULTATION, string PAYMODE, string PAID_AMOUNT, string BALANCE_AMOUNT, string OTHER_CHARGES_PER, string OTHER_CHARGES_AMOUNT, string INV_DISCOUNT_PERCENT, string INV_DISCOUNT_AMOUNT, string AMOUNT, string DISCOUNT, string TAXABLE_AMOUNT, string TAX_AMOUNT, string CASH_DISCOUNT, string NET_AMOUNT, string WARD_CATEGORY_CODE, string WARD_CATEGORY_NAME, string BED_CATEGORY_NAME, string BED_CATEGORY_CODE, string SOURCE, string PAYER_CODE, string PAYER_NAME, string EMERGENCY_NAME, string EMERGENCY_CONTACT, string EMERGENCY_ADDRESS, string XML_DATA_ALLERGY, string XML_DATA_PAST_HISTORY, string XML_DATA_PERSONAL_HISTORY, string XML_DATA_DISEASE, string XML_DATA_INVESTIGATION, string XML_DATA_FAMILY_HISTORY, string XML_DATA_PATIENT_COMPLAINT,
+        string SURGEON_CODE, string SURGEON_NAME, string ANESTHETIST_CODE, string ANESTHETIST_NAME, string DEPENDENT_NAME, string RELATION_WITH_DEPENDENT_CODE, string RELATION_WITH_DEPENDENT_NAME, string RANK, string PID_NO, string P_UNIT, string R_ADDRESS, string XML_DATA_PROCEDURE,
+        string DEPOSITE_DATE, string DEPOSITE_TIME, string DEPOSITOR_NAME, string BANK_NAME, string TRANSITION_NO, string SPECIAL_INSTRUCTION, string OPERATION, string DIAGNOSIS, string HISTORY_PRESENT_ILLNESS, string TREATMENT, string PATIENT_RECORD)
+    {
+        string resultstring = string.Empty;
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        resultstring = obj.IpdShortStayUpdateList(SHORT_STAY_NO, DEPARTMENT_CODE, DEPARTMENT_NAME, OPD_CARD_NO, CASUALTY_NO, DOCTOR_CODE, DOCTOR_NAME, DATE, REFERRED_BY_CODE, REFERRED_BY_NAME, VALIDITY, OLD_NO, WARD_NO, BED_NO, GATE_PASS_NO, ROOM_NO_CODE, ROOM_NO_NAME, MLC_NO, MLC_DATETIME, MLC_URL, UHID, NAME, GENDER, MOBILE, ALTERNATE_MOBILE, DOB, AGE_YY, AGE_MM, AGE_DD, IS_LITERATE, LANGUAGE_OF_CHOICE, AADHAAR_NO, RELIGION_CODE, RELIGION_NAME, MARITAL_STATUS, EMAIL, GUARDIAN, FAMILY_INCOME, PATIENT_CATEGORY_NAME, PATIENT_CATEGORY_CODE, COMPANY_NAME, EMPLOYEE_ID, INSURANCE_COMPANY_NAME, POLICY_NUMBER, POLICY_AMOUNT, OCCUPATION_CODE, OCCUPATION_NAME, DIET, PATIENT_CONDITION, HEIGHT, WEIGHT, BLOOD_GROUP, APGAR, GROWTH, WAIST, OBESITY, LOCALITY_CODE, LOCALITY_NAME, ADDRESS, HOUSE_NO, STREET_NAME, STREET_NO, LANDMARK, COUNTRY_CODE, COUNTRY_NAME, STATE_CODE, STATE_NAME, CITY_CODE, CITY_NAME, PIN, KIN_NAME, KIN_RELATION_CODE, KIN_RELATION_NAME, KIN_CONTACT_NO, PHONE, KIN_ADDRESS, PREGNANCY, PRENATAL_CHECKUP, FULLTERM, LAST_MANTURAL_DATE, EST_DELIVARY_DATE, NOTE, TRANSITION_TYPE, XML_REQUEST, XML_CONSULTATION, PAYMODE, PAID_AMOUNT, BALANCE_AMOUNT, OTHER_CHARGES_PER, OTHER_CHARGES_AMOUNT, INV_DISCOUNT_PERCENT, INV_DISCOUNT_AMOUNT, AMOUNT, DISCOUNT, TAXABLE_AMOUNT, TAX_AMOUNT, CASH_DISCOUNT, NET_AMOUNT, WARD_CATEGORY_CODE, WARD_CATEGORY_NAME, BED_CATEGORY_NAME, BED_CATEGORY_CODE, SOURCE, PAYER_CODE, PAYER_NAME, EMERGENCY_NAME, EMERGENCY_CONTACT, EMERGENCY_ADDRESS, XML_DATA_ALLERGY, XML_DATA_PAST_HISTORY, XML_DATA_PERSONAL_HISTORY, XML_DATA_DISEASE, XML_DATA_INVESTIGATION, XML_DATA_FAMILY_HISTORY, XML_DATA_PATIENT_COMPLAINT,
+             SURGEON_CODE, SURGEON_NAME, ANESTHETIST_CODE, ANESTHETIST_NAME,  DEPENDENT_NAME, RELATION_WITH_DEPENDENT_CODE, RELATION_WITH_DEPENDENT_NAME, RANK, PID_NO, P_UNIT, R_ADDRESS, XML_DATA_PROCEDURE,
+              DEPOSITE_DATE, DEPOSITE_TIME, DEPOSITOR_NAME, BANK_NAME, TRANSITION_NO, SPECIAL_INSTRUCTION, OPERATION, DIAGNOSIS, HISTORY_PRESENT_ILLNESS, TREATMENT, PATIENT_RECORD);
+        return resultstring.ToString();
+    }
+
+    [WebMethod]
+    public static string SearchDRDeptWise(string DEPT_CODE, string SPECIALITY)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.SearchDRDeptWiseList(DEPT_CODE, SPECIALITY);
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string DefaultServiceRecord(string PATIENT_CATEGORY)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.ModuleDefaultServiceRecord(PATIENT_CATEGORY);
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetService()
+    {
+        IPDAdmissionDLL objOpdServiceBillingMaster = new IPDAdmissionDLL();
+        DataSet ds = objOpdServiceBillingMaster.GetAlreadyServiceMaster();
+        return ds.GetXml().ToString();
+    }
+
+
+    [WebMethod()]
+    public static string GetCategory(string SERVICE_CODE)
+    {
+        IPDAdmissionDLL objIPDAdmissionDLL = new IPDAdmissionDLL();
+        DataSet ds = objIPDAdmissionDLL.GetAlreadyCategoryMaster(SERVICE_CODE);
+        return ds.GetXml().ToString();
+    }
+
+    [WebMethod()]
+    public static string GetSearchPatientDetailInfo(string SERVICE_TYPE, string SERVICE_CATEGORY, string PATIENT_CATEGORY)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL objIPDAdmissionDLL = new IPDAdmissionDLL();
+
+        ds = objIPDAdmissionDLL.GetSearchPatientDetailInfoList(SERVICE_TYPE, SERVICE_CATEGORY, PATIENT_CATEGORY);
+        return ds.GetXml().ToString();
+
+    }
+
+    [WebMethod()]
+    public static string GetWardCategory()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetWardCategoryList();
+        return ds.GetXml().ToString();
+
+
+    }
+
+    [WebMethod()]
+    public static string GetBedCategory()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.GetBedCategoryList();
+        return ds.GetXml().ToString();
+
+
+    }
+    [WebMethod()]
+    public static string GetBedNo(string WARD_CATEGORY_CODE)
+    {
+        DataSet ds = new DataSet();
+        HMS.BuisinessFramework.IPDAdmissionDLL objPatientTranser = new HMS.BuisinessFramework.IPDAdmissionDLL();
+        ds = objPatientTranser.GetBedNoDetail(WARD_CATEGORY_CODE);
+        return ds.GetXml().ToString();
+    }
+    [WebMethod()]
+    public static string PayerDetails()
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.PayerDetailsList();
+        return ds.GetXml().ToString();
+
+
+    }
+    [WebMethod()]
+    public static string BindRoomNO(string WARD_CODE)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.BIND_ROOMNOLIST(WARD_CODE);
+        return ds.GetXml().ToString();
+    }
+    //
+
+    //[WebMethod()]
+    //public static string BindBedNO(string ROOM_CODE)
+    //{
+    //    DataSet ds = new DataSet();
+    //    IPDAdmissionDLL obj = new IPDAdmissionDLL();
+    //    ds = obj.BIND_BEDNOLIST(ROOM_CODE);
+    //    return ds.GetXml().ToString();
+    //}
+    [WebMethod()]
+    public static string BindBedNO(string ROOM_CODE, string WARD_CODE)
+    {
+        DataSet ds = new DataSet();
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        ds = obj.BIND_BEDNOLIST(ROOM_CODE, WARD_CODE);
+        return ds.GetXml().ToString();
+    }
+
+
+    [WebMethod()]
+    public static string EXISTING_PATIENT_STATUS_SS(string UHID)
+    {
+        string resultstring = string.Empty;
+        IPDAdmissionDLL obj = new IPDAdmissionDLL();
+        resultstring = obj.EXISTING_PATIENT_STATUS_SS_DLL(UHID);
+        return resultstring.ToString();
+    }
+
+
+    [WebMethod()]
+    public static int GetModuleCode()
+    {
+        int module_code = Convert.ToInt32(HttpContext.Current.Session["MODULE_ID"]);
+        if (module_code != 0)
+        {
+            return module_code;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+
+}
